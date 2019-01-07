@@ -11,12 +11,17 @@
             "type": "string"
         },
         "subnetName": {
+            "defaultValue": "default",
             "type": "string"
         },
         "virtualNetworkName": {
+            "defaultValue": "AlteonRG-vnet",
             "type": "string"
         },
         "addressPrefixes": {
+            "defaultValue": [
+                "10.4.10.0/24"
+            ]
             "type": "array"
         },
         "subnets": {
