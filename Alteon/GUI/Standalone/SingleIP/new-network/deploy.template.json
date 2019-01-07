@@ -10,13 +10,6 @@
             "defaultValue": "alteonvm384",
             "type": "string"
         },
-        "networkSecurityGroupName": {
-            "defaultValue": "AlteonVM-nsg",
-            "type": "string"
-        },
-        "networkSecurityGroupRules": {
-            "type": "array"
-        },
         "subnetName": {
             "type": "string"
         },
