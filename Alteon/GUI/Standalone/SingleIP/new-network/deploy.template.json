@@ -19,7 +19,7 @@
             "type": "string"
         },
         "addressPrefixes": {
-            "defaultValue": ["10.4.10.0/24"],
+            "defaultValue": "10.4.10.0/24",
             "type": "array"
         },
         "subnets": {
