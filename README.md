@@ -12,6 +12,15 @@ Master-(product name)-(deployment method (CLI/GUI))-(solution name)
    The CLI directory contains ARM templates for automation and large scale deployment.
    Thest templates are subject to change and not covered by Radware support.
 
+## List of Radware ARM templates for Azure deployments
+
+The following list contains Radware deployment in Azure
+
+**Alteon**<br>
+
+  **Alteon - Single IP**
+    - [New-netwrok](https://github.com/F5Networks/f5-azure-arm-templates/tree/v6.0.0.0/supported/standalone/1nic/new-stack)
+      - *BYOL* <br><a href="https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/GUI/Standalone/SingleIP/new-network/deploy.template.json">  <img src="http://azuredeploy.net/deploybutton.png"/></a><br>
 
 
 ### Copyright
