@@ -23,12 +23,6 @@
             "type": "array"
         },
         "subnets": {
-            "defaultValue": "{
-                    "name": "default",
-                    "properties": {
-                        "addressPrefix": "10.4.10.0/24"
-                    }
-                }",
             "type": "array"
         },
         "publicIpAddressName": {
