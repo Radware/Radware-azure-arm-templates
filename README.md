@@ -3,7 +3,7 @@
 ## Introduction
 Welcome to Radware GitHub for Azure ARM templates.
 In the repository, please follow on bracnhes template:
-Master-<product name>-<deployment method (CLI/GUI)>-<solution name>
+Master-(product name)-(deployment method (CLI/GUI))-(solution name)
   
   - **GUI**<br>
   The GUI directory contains the most recent templates that devolped by Radware.
