@@ -1,12 +1,8 @@
-# Alteon powershell deployment
+# Radware Azure ARM templates
 
-## Table Of Contents ###
-- [Description](#description )
-- [How To Use](#how-to-use )
-  * [Required modules](#Required-modules)
-  * [Using Launch file](#Using-Launch-file)
-- [Currently Supported](#currently-supported)
-- [Planed In The Future](#planed-in-the-future)
+## Introduction
+Welcome to Radware GitHub for Azure ARM templates.
+In this repository 
 
 ## Description ##
 The following script is used to deploy alteon VM on azure with Microsoft Powershell script.<br>
