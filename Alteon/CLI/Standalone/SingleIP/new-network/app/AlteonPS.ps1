@@ -13,8 +13,8 @@ try {
     }
 
 
-$parameterFilePath = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Radware/Alteon-Azure-powershell-deployment/master/app/parameters.json"
-$templateFilePath = "https://raw.githubusercontent.com/Radware/Alteon-Azure-powershell-deployment/master/app/templates.json"
+$parameterFilePath = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/CLI/Standalone/SingleIP/new-network/app/parameters.json"
+$templateFilePath = "https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/CLI/Standalone/SingleIP/new-network/app/templates.json"
 
 
 Write-Host "Welcome to radware Alteon Deployment"
