@@ -163,7 +163,7 @@
                         "publisher": "radware",
                         "offer": "radware-alteon-va",
                         "sku": "radware-alteon-ng-va-adc",
-                        "version": "32.1.0000003"
+                        "version": "32.2.0000012"
                     }
                 },
                 "networkProfile": {
