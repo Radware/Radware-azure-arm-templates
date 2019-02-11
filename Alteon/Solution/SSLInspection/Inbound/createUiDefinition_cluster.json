@@ -61,6 +61,34 @@
           }
         ],
         "visible": "[equals(basics('EnaDisAlteonClusterTag'), 'Enable')]"
+      }, {
+        "name": "VirtualNetwork",
+        "type": "Microsoft.Network.VirtualNetworkCombo",
+        "label": {
+          "virtualNetwork": "Virtual network",
+          "subnets": "Subnets"
+        },
+        "toolTip": {
+          "virtualNetwork": "Choose application virtual network",
+          "subnets": "Choose application subnet"
+        },
+        "constraints": {
+          "minAddressPrefixSize": "/24"
+        },
+        "options": {
+          "hideExisting": false
+        },
+        "subnets": {
+          "subnet1": {
+            "label": "First subnet",
+            "constraints": {
+              "minAddressPrefixSize": "/24",
+              "minAddressCount": 12,
+              "requireContiguousAddresses": true
+            }
+          }
+        },
+        "visible": true
       }
     ],
     "steps": [{
@@ -450,42 +478,6 @@
             },
             "visible": "[equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Enable')]"
           }, {
-            "name": "RealsVirtualNetwork",
-            "type": "Microsoft.Network.VirtualNetworkCombo",
-            "label": {
-              "virtualNetwork": "Virtual network",
-              "subnets": "Subnets"
-            },
-            "toolTip": {
-              "virtualNetwork": "Choose Real server virtual network",
-              "subnets": "Choose Real server subnet"
-            },
-            "defaultValue": {
-              "name": "vnet01",
-              "addressPrefixSize": "/16"
-            },
-            "constraints": {
-              "minAddressPrefixSize": "/24"
-            },
-            "options": {
-              "hideExisting": false
-            },
-            "subnets": {
-              "subnet1": {
-                "label": "First subnet",
-                "defaultValue": {
-                  "name": "subnet-1",
-                  "addressPrefixSize": "/24"
-                },
-                "constraints": {
-                  "minAddressPrefixSize": "/24",
-                  "minAddressCount": 12,
-                  "requireContiguousAddresses": true
-                }
-              }
-            },
-            "visible": true
-          }, {
             "name": "RealsCount",
             "type": "Microsoft.Common.DropDown",
             "label": "Number of discrete real servers",
@@ -767,42 +759,6 @@
               "validationMessage": "Only alphanumeric characters are allowed"
             },
             "visible": "[equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Enable')]"
-          }, {
-            "name": "SecDevVirtualNetwork",
-            "type": "Microsoft.Network.VirtualNetworkCombo",
-            "label": {
-              "virtualNetwork": "Virtual network",
-              "subnets": "Subnets"
-            },
-            "toolTip": {
-              "virtualNetwork": "Choose Security Device virtual network",
-              "subnets": "Choose Security Device subnet"
-            },
-            "defaultValue": {
-              "name": "vnet01",
-              "addressPrefixSize": "/16"
-            },
-            "constraints": {
-              "minAddressPrefixSize": "/24"
-            },
-            "options": {
-              "hideExisting": false
-            },
-            "subnets": {
-              "subnet1": {
-                "label": "First subnet",
-                "defaultValue": {
-                  "name": "subnet-1",
-                  "addressPrefixSize": "/24"
-                },
-                "constraints": {
-                  "minAddressPrefixSize": "/24",
-                  "minAddressCount": 12,
-                  "requireContiguousAddresses": true
-                }
-              }
-            },
-            "visible": true
           }, {
             "name": "SecDevCount",
             "type": "Microsoft.Common.DropDown",
@@ -1158,10 +1114,9 @@
       "location": "[location()]",
       "AlteonClusterName": "[basics('AlteonClusterName')]",
       "tagOwnerName": "[basics('AlteonClusterOwnerTagName')]",
+      "VirtualNetwork": "[basics('VirtualNetwork')]",
       "tagUserDefinedName": "[basics('AlteonClusterUserDefinedTag').TagName]",
       "tagUserDefinedValue": "[basics('AlteonClusterUserDefinedTag').TagValue]",
-      "adminUsername": "[steps('VmssInstanceCredentials').adminUsername]",
-      "adminPassword": "[steps('VmssInstanceCredentials').adminPassword.password]",
       "CloudDeviceId": "[steps('GelSettings').CloudDeviceId]",
       "PrimaryLlsIP": "[steps('GelSettings').PrimaryLlsIP]",
       "SecondaryLlsIP": "[steps('GelSettings').SecondaryLlsIP]",
@@ -1178,8 +1133,7 @@
       "ClientID": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.ClientID]",
       "ClientSecret": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.ClientSecret]",
       "TenantID": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.TenantID]",
-      "realsResourceGroupName": "[steps('SLBSetting').RealsVirtualNetwork]",
-      "RealsVirtualNetwork": "[steps('SLBSetting').RealsVirtualNetwork]",
+      "realsResourceGroupName": "[steps('SLBSetting').realsResourceGroupName]",
       "RealsScalesetName": "[steps('SLBSetting').RealsScalesetName]",
       "RealsCount": "[string(steps('SLBSetting').RealsCount)]",
       "SLBMetric": "[steps('SLBSetting').SLBMetric]",
@@ -1197,7 +1151,6 @@
       "SslPrivateKeyPassphrase": "[steps('SLBSetting').sslPassphrase]",
       "sslCertNkeyFile": "[steps('SLBSetting').sslCertKeyBundleFile]",
       "SecDevResourceGroupName": "[steps('SecDevSetting').SecDevResourceGroupName]",
-      "SecDevVirtualNetwork": "[steps('SecDevSetting').SecDevVirtualNetwork]",
       "SecDevScalesetName": "[steps('SecDevSetting').SecDevScalesetName]",
       "SecDevCount": "[string(steps('SecDevSetting').SecDevCount)]",
       "SecDevMetric": "[steps('SecDevSetting').SecDevMetric]",
