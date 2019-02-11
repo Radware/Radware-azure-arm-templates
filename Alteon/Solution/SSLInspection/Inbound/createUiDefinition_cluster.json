@@ -61,44 +61,8 @@
           }
         ],
         "visible": "[equals(basics('EnaDisAlteonClusterTag'), 'Enable')]"
-      },{
-        
-            "name": "AppVirtualNetwork",
-            "type": "Microsoft.Network.VirtualNetworkCombo",
-            "label": {
-              "virtualNetwork": "Virtual network",
-              "subnets": "Subnets"
-            },
-            "toolTip": {
-              "virtualNetwork": "Choose Application virtual network",
-              "subnets": "Choose Application server subnet"
-            },
-            "defaultValue": {
-              "name": "vnet01",
-              "addressPrefixSize": "/16"
-            },
-            "constraints": {
-              "minAddressPrefixSize": "/24"
-            },
-            "options": {
-              "hideExisting": false
-            },
-            "subnets": {
-              "subnet1": {
-                "label": "First subnet",
-                "defaultValue": {
-                  "name": "subnet-1",
-                  "addressPrefixSize": "/24"
-                },
-                "constraints": {
-                  "minAddressPrefixSize": "/24",
-                  "minAddressCount": 12,
-                  "requireContiguousAddresses": true
-                }
-              }
-            },
-            "visible": true
-          } 
+      }
+    ],
     "steps": [{
         "name": "GelSettings",
         "label": "GEL Settings",
