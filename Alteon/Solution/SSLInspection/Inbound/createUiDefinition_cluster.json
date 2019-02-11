@@ -99,7 +99,6 @@
             },
             "visible": true
           } 
-    ],
     "steps": [{
         "name": "GelSettings",
         "label": "GEL Settings",
