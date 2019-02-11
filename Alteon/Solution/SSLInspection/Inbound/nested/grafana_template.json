@@ -1,0 +1,172 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "String"
+        },
+        "monitorLbBackendPool": { 
+			"defaultValue": "nisnisgraph",
+            "type": "String"
+        },
+        "virtualMachineName": {
+			"defaultValue": "nisnisgraph",
+            "type": "String"
+        },
+        "virtualMachineRG": {
+			"defaultValue": "nisnisgraph",
+            "type": "String"
+        },
+        "osDiskType": {
+			"defaultValue": "Standard_LRS",
+            "type": "String"
+        },
+        "virtualMachineSize": {
+			"defaultValue": "Standard_D1",
+            "type": "String"
+        },
+        "adminUsername": {
+			"defaultValue": "radware",
+            "type": "String"
+        },
+        "adminPassword": {
+            "type": "SecureString"
+        },
+		"subnetId":{
+            "defaultValue": "none",
+			"type": "String"
+        },
+		"clusterSecurityGroupName":{
+            "defaultValue": "none",
+			"type": "String"
+        },
+		"ClientID": {
+            "defaultValue": "none",
+            "type": "string",
+            "metadata": {
+                "description": "AD Client ID"
+            }
+        },
+		"ClientSecret": {
+            "defaultValue": "none",
+            "type": "securestring",
+            "metadata": {
+                "description": "AD Client Secret"
+            }
+        },
+		"TenantID": {
+            "defaultValue": "none",
+            "type": "string",
+            "metadata": {
+                "description": "AD Tenant ID"
+            }
+        },  
+		"vmTags": {
+            "type": "object",
+            "defaultValue": {},
+            "metadata": {
+                "description": "VM tags"
+            }
+        }                             
+    },
+    "variables": {
+        "subnetRef": "[parameters('subnetId')]",
+        "subscripID": "[subscription().id]",
+        "networkInterfaceName": "[concat(resourceGroup().name, 'MonitorIface')]",
+        "monitorImagePublisher": "radware",
+		"monitorImageOffer": "alteon-va-cluster-monitor",
+        "monitor_radware_sku": "alteon-va-cluster-monitoring",	
+		"plan": "[variables(concat('plan-', variables('monitor_radware_sku')))]",
+		"plan-alteon-va-cluster-monitoring": {
+			"name": "[variables('monitor_radware_sku')]",
+			"product": "[variables('monitorImageOffer')]",
+			"publisher": "[variables('monitorImagePublisher')]"
+		},
+        "customData": "[concat('#!/usr/bin/env python3\n', 'import fileinput\n', 'import os\n', '\n', '\n', 'def main():\n', '    filename = ''/etc/prometheus/prometheus.yml''\n', '    with fileinput.FileInput(filename, inplace=True, backup=''.bak'') as file:\n', '        check_words = (\n', '            \"''subscription_id''\",\n', '            \"''tenant_id''\",\n', '            \"''client_id''\",\n', '            \"''client_secret''\",\n', '            \"''resource_group''\"\n', '        )\n', '        rep_words = (\n', '            \"''', variables('subscripID'), '''\",\n', '            \"''', parameters('TenantID'), '''\",\n', '            \"''', parameters('ClientID'), '''\",\n', '            \"''', parameters('ClientSecret'), '''\",\n', '            \"''(?i:(', parameters('virtualMachineRG'), ';true))''\"\n', '        )\n', '        for line in file:\n', '            for check, rep in zip(check_words, rep_words):\n', '                line = line.replace(check, rep).rstrip()\n', '            if ''subscription_id:'' in line:\n', '                line = line.replace(''/subscriptions/'', '''')\n', '            print(line)\n', '    os.system(\"service prometheus restart\")\n', '\n', '\n', 'if __name__ == \"__main__\":\n', '    main()\n')]"
+
+		},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('networkInterfaceName')]",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "tags": {},
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "monitorVmIPConfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAddressVersion": "IPv4",  
+                            "privateIPAllocationMethod": "Dynamic",            
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[parameters('monitorLbBackendPool')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[parameters('clusterSecurityGroupName')]"
+                }
+            },
+            "dependsOn": [
+               
+            ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachineName')]",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('vmTags')]",
+			"plan": "[variables('plan')]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "[variables('monitorImagePublisher')]",
+						"offer": "[variables('monitorImageOffer')]",
+						"sku" : "[variables('monitor_radware_sku')]",
+                        "version": "latest"					
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+					"customData": "[base64(variables('customData'))]"
+
+                }
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
+            ]
+        }
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "String",
+            "value": "[parameters('adminUsername')]"
+        }
+    }
+}
