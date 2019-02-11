@@ -61,34 +61,6 @@
           }
         ],
         "visible": "[equals(basics('EnaDisAlteonClusterTag'), 'Enable')]"
-      }, {
-        "name": "VirtualNetwork",
-        "type": "Microsoft.Network.VirtualNetworkCombo",
-        "label": {
-          "virtualNetwork": "Virtual network",
-          "subnets": "Subnets"
-        },
-        "toolTip": {
-          "virtualNetwork": "Choose application virtual network",
-          "subnets": "Choose application subnet"
-        },
-        "constraints": {
-          "minAddressPrefixSize": "/24"
-        },
-        "options": {
-          "hideExisting": false
-        },
-        "subnets": {
-          "subnet1": {
-            "label": "First subnet",
-            "constraints": {
-              "minAddressPrefixSize": "/24",
-              "minAddressCount": 12,
-              "requireContiguousAddresses": true
-            }
-          }
-        },
-        "visible": true
       }
     ],
     "steps": [{
@@ -477,6 +449,42 @@
               "validationMessage": "Only alphanumeric characters are allowed"
             },
             "visible": "[equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Enable')]"
+          }, {
+            "name": "VirtualNetwork",
+            "type": "Microsoft.Network.VirtualNetworkCombo",
+            "label": {
+              "virtualNetwork": "application Virtual network",
+              "subnets": "Subnets"
+            },
+            "toolTip": {
+              "virtualNetwork": "Choose application virtual network",
+              "subnets": "Choose application subnet"
+            },
+            "defaultValue": {
+              "name": "vnet01",
+              "addressPrefixSize": "/16"
+            },
+            "constraints": {
+              "minAddressPrefixSize": "/24"
+            },
+            "options": {
+              "hideExisting": false
+            },
+            "subnets": {
+              "subnet1": {
+                "label": "First subnet",
+                "defaultValue": {
+                  "name": "subnet-1",
+                  "addressPrefixSize": "/24"
+                },
+                "constraints": {
+                  "minAddressPrefixSize": "/24",
+                  "minAddressCount": 12,
+                  "requireContiguousAddresses": true
+                }
+              }
+            },
+            "visible": true
           }, {
             "name": "RealsCount",
             "type": "Microsoft.Common.DropDown",
