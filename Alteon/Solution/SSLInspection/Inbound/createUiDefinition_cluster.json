@@ -7,7 +7,7 @@
         "name": "AlteonClusterName",
         "type": "Microsoft.Common.TextBox",
         "label": "Alteon Cluster Name",
-        "defaultValue": "[concat('ExxonTest1-', string(rand(1, 1000)))]",
+        "defaultValue": "[concat('Alteon', string(rand(1, 1000)))]",
         "constraints": {
           "regex": "^[a-z0-9A-Z]{1,30}$",
           "validationMessage": "Alteon cluster must start with an alphanumeric characters",
@@ -64,46 +64,6 @@
       }
     ],
     "steps": [{
-        "name": "VmssInstanceCredentials",
-        "label": "Alteon Instance Credentials",
-        "subLabel": {
-          "preValidation": "Configure Alteon instance credentials settings",
-          "postValidation": "Done"
-        },
-        "bladeTitle": " Alteon instance credentials settings",
-        "elements": [{
-            "name": "adminUsername",
-            "type": "Microsoft.Compute.UserNameTextBox",
-            "label": "Username",
-            "toolTip": "Administrator user name for the Alteon virtual VA machine",
-            "osPlatform": "Linux",
-            "constraints": {
-              "required": true
-            }
-          }, {
-            "name": "adminPassword",
-            "type": "Microsoft.Compute.CredentialsCombo",
-            "label": {
-              "authenticationType": "Alteon instance credentials",
-              "password": "Password",
-              "confirmPassword": "Confirm password",
-              "sshPublicKey": "Note that SSH key isn't supported"
-            },
-            "toolTip": {
-              "password": "Admin password for the virtual machines",
-              "sshPublicKey": "Note that SSH key isn't supported"
-            },
-            "options": {
-              "hideConfirmation": false,
-              "hidePassword": false
-            },
-            "constraints": {
-              "required": true
-            },
-            "osPlatform": "Linux"
-          }
-        ]
-      }, {
         "name": "GelSettings",
         "label": "GEL Settings",
         "subLabel": {
@@ -1023,6 +983,18 @@
                 }
               ]
             },
+            "visible": true
+          }, {
+            "name": "SecDevService",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Port Number for the Encrypted traffic",
+            "defaultValue": "80",
+            "constraints": {
+              "required": true,            
+              "regex": "^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-6])$",
+              "validationMessage": "Format should be valid tcp port 1 to 65536"
+            },
+            "toolTip": "The port number will be used to send traffic to Alteon",
             "visible": true
           }, {
             "name": "SecDevPortNumber",
