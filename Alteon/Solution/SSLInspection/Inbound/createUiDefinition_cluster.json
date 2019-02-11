@@ -1,0 +1,1245 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [{
+        "name": "AlteonClusterName",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Alteon Cluster Name",
+        "defaultValue": "[concat('ExxonTest1-', string(rand(1, 1000)))]",
+        "constraints": {
+          "regex": "^[a-z0-9A-Z]{1,30}$",
+          "validationMessage": "Alteon cluster must start with an alphanumeric characters",
+          "required": true
+        },
+        "toolTip": "Alteon VA Cluster name",
+        "visible": true
+      }, {
+        "name": "EnaDisAlteonClusterTag",
+        "type": "Microsoft.Common.OptionsGroup",
+        "label": "Enable Alteon instance tagging",
+        "defaultValue": "Disable",
+        "toolTip": "Enable/Disable Alteon instance tagging",
+        "constraints": {
+          "allowedValues": [{
+              "label": "Enable",
+              "value": "Enable"
+            }, {
+              "label": "Disable",
+              "value": "Disable"
+            }
+          ]
+        },
+        "visible": true
+      }, {
+        "name": "AlteonClusterOwnerTagName",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Alteon Cluster Owner Tag Name",
+        "defaultValue": "",
+        "constraints": {
+          "validationMessage": "Alteon cluster Owner Tag Name"
+        },
+        "toolTip": "Alteon VA Cluster name",
+        "visible": "[equals(basics('EnaDisAlteonClusterTag'), 'Enable')]"
+      }, {
+        "name": "AlteonClusterUserDefinedTag",
+        "type": "Microsoft.Common.Section",
+        "label": "User defined Tag name",
+        "elements": [{
+            "name": "TagName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Add user defined tag name",
+            "toolTip": "Add user defined tag name",
+            "defaultValue": ""
+          }, {
+            "name": "TagValue",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Add user defined tag value",
+            "toolTip": "Add user defined tag value",
+            "defaultValue": ""
+          }
+        ],
+        "visible": "[equals(basics('EnaDisAlteonClusterTag'), 'Enable')]"
+      }
+    ],
+    "steps": [{
+        "name": "VmssInstanceCredentials",
+        "label": "Alteon Instance Credentials",
+        "subLabel": {
+          "preValidation": "Configure Alteon instance credentials settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": " Alteon instance credentials settings",
+        "elements": [{
+            "name": "adminUsername",
+            "type": "Microsoft.Compute.UserNameTextBox",
+            "label": "Username",
+            "toolTip": "Administrator user name for the Alteon virtual VA machine",
+            "osPlatform": "Linux",
+            "constraints": {
+              "required": true
+            }
+          }, {
+            "name": "adminPassword",
+            "type": "Microsoft.Compute.CredentialsCombo",
+            "label": {
+              "authenticationType": "Alteon instance credentials",
+              "password": "Password",
+              "confirmPassword": "Confirm password",
+              "sshPublicKey": "Note that SSH key isn't supported"
+            },
+            "toolTip": {
+              "password": "Admin password for the virtual machines",
+              "sshPublicKey": "Note that SSH key isn't supported"
+            },
+            "options": {
+              "hideConfirmation": false,
+              "hidePassword": false
+            },
+            "constraints": {
+              "required": true
+            },
+            "osPlatform": "Linux"
+          }
+        ]
+      }, {
+        "name": "GelSettings",
+        "label": "GEL Settings",
+        "subLabel": {
+          "preValidation": "Configure GEL settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "License Server Mode",
+        "elements": [{
+            "name": "ClsLlsGelSettings",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "License Server Mode",
+            "defaultValue": "Local",
+            "toolTip": "Cloud/Local GEL setting",
+            "constraints": {
+              "allowedValues": [{
+                  "label": "Cloud",
+                  "value": "Cloud"
+                }, {
+                  "label": "Local",
+                  "value": "Local"
+                }
+              ]
+            },
+            "visible": true
+          }, {
+            "name": "CloudDeviceId",
+            "type": "Microsoft.Common.TextBox",
+            "label": "CLS Device ID",
+            "defaultValue": "",
+            "toolTip": "Cloud license server ID or full URL",
+            "constraints": {
+              "required": true
+            },
+            "visible": "[equals(steps('GelSettings').ClsLlsGelSettings, 'Cloud')]"
+          }, {
+            "name": "PrimaryLlsIP",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Primary LLS IP Address",
+            "defaultValue": "",
+            "toolTip": "Primary LLS IP Address",
+            "constraints": {
+              "required": true,
+              "validationMessage": "Format should be a valid IPv4 address or domain name"
+            },
+            "visible": "[equals(steps('GelSettings').ClsLlsGelSettings, 'Local')]"
+          }, {
+            "name": "SecondaryLlsIP",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Secondary LLS IP Address",
+            "defaultValue": "",
+            "toolTip": "Secondary LLS IP Address",
+            "constraints": {
+              "validationMessage": "Format should be a valid IPv4 address or domain name"
+            },
+            "visible": "[equals(steps('GelSettings').ClsLlsGelSettings, 'Local')]"
+          }, {
+            "name": "EntitlementId",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Entitlement ID",
+            "defaultValue": "",
+            "toolTip": "Set Entitlement ID",
+            "constraints": {
+              "required": true,
+              "validationMessage": "Format should be a valid Entitlement Id value"
+            }
+          }, {
+            "name": "ThroughputLicense",
+            "type": "Microsoft.Common.DropDown",
+            "label": "License throughput (Mbps)",
+            "defaultValue": "25",
+            "toolTip": "Choose licence server available throughput (Mbps)",
+            "constraints": {
+              "allowedValues": [{
+                  "label": "25",
+                  "value": "25"
+                }, {
+                  "label": "50",
+                  "value": "50"
+                }, {
+                  "label": "100",
+                  "value": "100"
+                }, {
+                  "label": "200",
+                  "value": "200"
+                }, {
+                  "label": "500",
+                  "value": "500"
+                }, {
+                  "label": "1000",
+                  "value": "1000"
+                }
+              ]
+            }
+          }, {
+            "name": "AddOnSubsciption",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Add-On Subsciption",
+            "defaultValue": "none",
+            "toolTip": "Add-On Subsciption",
+            "constraints": {
+              "allowedValues": [{
+                  "label": "none",
+                  "value": "none"
+                }, {
+                  "label": "Perform",
+                  "value": "Perform"
+                }, {
+                  "label": "Secure",
+                  "value": "Secure"
+                }
+              ]
+            },
+            "visible": true
+          }
+        ]
+      }, {
+        "name": "ScalesetSettings",
+        "label": "Scaleset settings",
+        "subLabel": {
+          "preValidation": "Configure Alteon cluster",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Advanced Scaleset Settings",
+        "elements": [{
+            "name": "LbPublicIpAddress",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP address for Alteon cluster",
+              "domainNameLabel": "Hostname name Alteon cluster"
+            },
+            "toolTip": {
+              "publicIpAddress": "Public IP address for Alteon cluster"
+            },
+            "defaultValue": {
+              "publicIpAddressName": "[concat(basics('AlteonClusterName'), '-ip')]",
+              "domainNameLabel": "[concat(basics('AlteonClusterName'), '-ip')]"
+            },
+            "options": {
+              "hideNone": true,
+              "hideExisting": true,
+              "hideDomainNameLabel": true
+            },
+            "visible": false
+          }, {
+            "name": "EnaDisScalesetSettings",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Enable/Disable advanced Scaleset settings",
+            "defaultValue": "Disable",
+            "toolTip": "Enable/Disable advanced Scaleset settings",
+            "constraints": {
+              "allowedValues": [{
+                  "label": "Enable",
+                  "value": "Enable"
+                }, {
+                  "label": "Disable",
+                  "value": "Disable"
+                }
+              ]
+            },
+            "visible": true
+          }, {
+            "name": "InstanceSize",
+            "type": "Microsoft.Compute.SizeSelector",
+            "label": "Instance size",
+            "toolTip": "The size of scaleset virtual machine/s",
+            "recommendedSizes": [
+              "Standard_D1",
+              "Standard_A1",
+              "Standard_A2",
+              "Standard_A3",
+              "Standard_D2",
+              "Standard_D3"
+            ],
+            "constraints": {
+              "allowedSizes": [
+                "Standard_D1",
+                "Standard_A1_v2",
+                "Standard_A2",
+                "Standard_A3",
+                "Standard_DS1_V2",
+                "Standard_DS2_V2",
+                "Standard_DS3_V2",
+                "Standard_DS4_V2",
+                "Standard_DS5_V2",
+                "Standard_DS11_V2",
+                "Standard_D2",
+                "Standard_D3",
+                "Standard_D4",
+                "Standard_D11",
+                "Standard_D12",
+                "Standard_D13",
+                "Standard_D14"
+              ]
+            },
+            "osPlatform": "Linux",
+            "imageReference": {
+              "publisher": "radware",
+              "offer": "radware-alteon-va",
+              "sku": "radware-alteon-ng-va-adc"
+            },
+            "visible": "[equals(steps('ScalesetSettings').EnaDisScalesetSettings, 'Enable')]"
+          }, {
+            "name": "MinNumOfVMs",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Minimum number of VMs",
+            "defaultValue": "2",
+            "toolTip": "Define minimum of scaleset VMs",
+            "constraints": {
+              "required": true,
+              "regex": "^((?!0)[0-9]*)$",
+              "validationMessage": "Only numeric characters are allowed 1-10"
+            },
+            "visible": "[equals(steps('ScalesetSettings').EnaDisScalesetSettings, 'Enable')]"
+          }, {
+            "name": "MaxNumOfVMs",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Maximum number of VMs",
+            "defaultValue": "10",
+            "toolTip": "Define maximum of scaleset VMs",
+            "constraints": {
+              "required": true,
+              "regex": "^((?!0)[0-9]*)$",
+              "validationMessage": "Only numeric characters are allowed 1-10"
+            },
+            "visible": "[equals(steps('ScalesetSettings').EnaDisScalesetSettings, 'Enable')]"
+          }, {
+            "name": "ScalesetScaleOut",
+            "type": "Microsoft.Common.Section",
+            "label": "Scale out",
+            "elements": [{
+                "name": "ScaleOutCpuThreshold",
+                "type": "Microsoft.Common.TextBox",
+                "defaultValue": "80",
+                "constraints": {
+                  "regex": "^100(\\.0{0,2}?)?$|^\\d{0,2}(\\.\\d{0,2})?$"
+                },
+                "label": "CPU threshold (%)"
+              }, {
+                "name": "ScaleOutInboundTraffic",
+                "type": "Microsoft.Common.TextBox",
+                "defaultValue": "80",
+                "constraints": {
+                  "regex": "^100(\\.0{0,2}?)?$|^\\d{0,2}(\\.\\d{0,2})?$"
+                },
+                "label": "[concat('Inbound traffic (%) of ', steps('GelSettings').ThroughputLicense, 'Mbps')]"
+              }, {
+                "name": "ScaleOutIncreaseBy",
+                "type": "Microsoft.Common.TextBox",
+                "defaultValue": "1",
+                "label": "Number of VMs to increase by"
+              }
+            ],
+            "visible": "[equals(steps('ScalesetSettings').EnaDisScalesetSettings, 'Enable')]"
+          }, {
+            "name": "ScalesetScaleIn",
+            "type": "Microsoft.Common.Section",
+            "label": "Scale in",
+            "elements": [{
+                "name": "ScaleInCpuThreshold",
+                "type": "Microsoft.Common.TextBox",
+                "defaultValue": "60",
+                "constraints": {
+                  "regex": "^100(\\.0{0,2}?)?$|^\\d{0,2}(\\.\\d{0,2})?$"
+                },
+                "label": "CPU threshold (%)"
+              }, {
+                "name": "ScaleInInboundTraffic",
+                "type": "Microsoft.Common.TextBox",
+                "defaultValue": "60",
+                "constraints": {
+                  "regex": "^100(\\.0{0,2}?)?$|^\\d{0,2}(\\.\\d{0,2})?$"
+                },
+                "label": "[concat('Inbound traffic (%) of ', steps('GelSettings').ThroughputLicense, 'Mbps')]"
+              }, {
+                "name": "ScaleInDecreaseBy",
+                "type": "Microsoft.Common.TextBox",
+                "defaultValue": "1",
+                "label": "Number of VMs to decreased by"
+              }
+            ],
+            "visible": "[equals(steps('ScalesetSettings').EnaDisScalesetSettings, 'Enable')]"
+          }
+        ]
+      }, {
+        "name": "ActiveDirSetting",
+        "label": "Active Directory",
+        "subLabel": {
+          "preValidation": "Configure Active Directory settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Active Directory settings (Autoscaling)",
+        "elements": [{
+            "name": "ActiveDirectoryCredentials",
+            "type": "Microsoft.Common.Section",
+            "label": "Active Directory Credentials",
+            "elements": [{
+                "name": "ClientID",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Client ID",
+                "defaultValue": "",
+                "toolTip": "Active Directory Client ID",
+                "constraints": {
+                  "required": true,
+                  "regex": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+                  "validationMessage": "Format should be valid Client ID"
+                },
+                "visible": true
+              }, {
+                "name": "ClientSecret",
+                "type": "Microsoft.Common.PasswordBox",
+                "label": {
+                  "password": "Client Secret",
+                  "confirmPassword": "Confirm password"
+                },
+                "toolTip": "Active Directory Client Secret",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+                  "validationMessage": "Format should be a valid Client Secret"
+                },
+                "options": {
+                  "hideConfirmation": true
+                },
+                "visible": true
+              }, {
+                "name": "TenantID",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Tenant ID",
+                "defaultValue": "",
+                "toolTip": "Active Directory Tenant ID",
+                "constraints": {
+                  "required": true,
+                  "regex": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+                  "validationMessage": "Format should be a valid Tenant ID"
+                },
+                "visible": true
+              }
+            ],
+            "visible": true
+          }
+        ]
+      }, {
+        "name": "SLBSetting",
+        "label": "SLB settings",
+        "subLabel": {
+          "preValidation": "Configure SLB settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "SLB settings",
+        "elements": [{
+            "name": "EnaDisAutoscaleSettings",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Enable/Disable advanced Autoscale settings",
+            "defaultValue": "Enable",
+            "toolTip": "Enable/Disable advanced Autoscale settings",
+            "constraints": {
+              "allowedValues": [{
+                  "label": "Enable",
+                  "value": "Enable"
+                }, {
+                  "label": "Disable",
+                  "value": "Disable"
+                }
+              ]
+            },
+            "visible": true
+          }, {
+            "name": "realsResourceGroupName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Real Servers Resource group Name",
+            "defaultValue": "",
+            "toolTip": "Set the Real Servers Resource group Name",
+            "visible": "[equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Enable')]"
+          }, {
+            "name": "RealsScalesetName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Real Servers Scale-set Name",
+            "defaultValue": "",
+            "toolTip": "Set Real Scaleset Name",
+            "constraints": {
+              "required": true,
+              "regex": "^[a-z0-9A-Z]{1,30}$",
+              "validationMessage": "Only alphanumeric characters are allowed"
+            },
+            "visible": "[equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Enable')]"
+          }, {
+            "name": "RealsVirtualNetwork",
+            "type": "Microsoft.Network.VirtualNetworkCombo",
+            "label": {
+              "virtualNetwork": "Virtual network",
+              "subnets": "Subnets"
+            },
+            "toolTip": {
+              "virtualNetwork": "Choose Real server virtual network",
+              "subnets": "Choose Real server subnet"
+            },
+            "defaultValue": {
+              "name": "vnet01",
+              "addressPrefixSize": "/16"
+            },
+            "constraints": {
+              "minAddressPrefixSize": "/24"
+            },
+            "options": {
+              "hideExisting": false
+            },
+            "subnets": {
+              "subnet1": {
+                "label": "First subnet",
+                "defaultValue": {
+                  "name": "subnet-1",
+                  "addressPrefixSize": "/24"
+                },
+                "constraints": {
+                  "minAddressPrefixSize": "/24",
+                  "minAddressCount": 12,
+                  "requireContiguousAddresses": true
+                }
+              }
+            },
+            "visible": true
+          }, {
+            "name": "RealsCount",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Number of discrete real servers",
+            "defaultValue": "0",
+            "toolTip": "",
+            "constraints": {
+              "required": true,
+              "allowedValues": [{
+                  "label": "0",
+                  "value": 0
+                }, {
+                  "label": "1",
+                  "value": 1
+                }, {
+                  "label": "2",
+                  "value": 2
+                }, {
+                  "label": "3",
+                  "value": 3
+                }, {
+                  "label": "4",
+                  "value": 4
+                }, {
+                  "label": "5",
+                  "value": 5
+                }, {
+                  "label": "6",
+                  "value": 6
+                }, {
+                  "label": "7",
+                  "value": 7
+                }, {
+                  "label": "8",
+                  "value": 8
+                }, {
+                  "label": "9",
+                  "value": 9
+                }, {
+                  "label": "10",
+                  "value": 10
+                }
+              ]
+            }
+          }, {
+            "name": "RealServerSection",
+            "type": "Microsoft.Common.Section",
+            "label": "Real Servers IP Address",
+            "elements": [{
+                "name": "Real1",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 1 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 0))]"
+              }, {
+                "name": "Real2",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 2 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 1))]"
+              }, {
+                "name": "Real3",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 3 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 2))]"
+              }, {
+                "name": "Real4",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 4 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 3))]"
+              }, {
+                "name": "Real5",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 5 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 4))]"
+              }, {
+                "name": "Real6",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 6 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 5))]"
+              }, {
+                "name": "Real7",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 7 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 6))]"
+              }, {
+                "name": "Real8",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 8 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 7))]"
+              }, {
+                "name": "Real9",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 9 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 8))]"
+              }, {
+                "name": "Real10",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 10 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 9))]"
+              }
+            ],
+            "visible": "[equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable')]"
+          }, {
+            "name": "SLBMetric",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Metrics",
+            "defaultValue": "Least connections",
+            "toolTip": "The load balancing metrics you want to use",
+            "constraints": {
+              "allowedValues": [{
+                  "label": "Least connections",
+                  "value": "leastconns"
+                }, {
+                  "label": "Round robin",
+                  "value": "roundrobin"
+                }, {
+                  "label": "Response time",
+                  "value": "response"
+                }
+              ]
+            },
+            "visible": true
+          }, {
+            "name": "SlbPortNumber",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Service Port Number",
+            "defaultValue": "443",
+            "constraints": {
+              "regex": "^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-6])$",
+              "validationMessage": "Format should be valid tcp port 1 to 65536"
+            },
+            "toolTip": "The port number Alteon will use for recieving decrypted traffic from the Security Device.",
+            "visible": true
+          }, {
+            "name": "SlbServiceRport",
+            "type": "Microsoft.Common.TextBox",
+            "label": "BackEnd server Port Number",
+            "defaultValue": "443",
+            "constraints": {
+              "regex": "^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-6])$",
+              "validationMessage": "Format should be valid tcp port 1 to 65536"
+            },
+            "toolTip": "The port number Alteon will use to send traffic to the BackEnd servers",
+            "visible": true
+          }, {
+            "name": "sslPassphrase",
+            "type": "Microsoft.Common.PasswordBox",
+            "label": {
+              "password": "SSL passphrase",
+              "confirmPassword": "Confirm password"
+            },
+            "toolTip": "Enter ssl key passphrase. Above 4 and below 40 characters",
+            "constraints": {
+              "required": true,
+              "regex": "^.{4,40}$",
+              "validationMessage": "Format should be a valid SSL passphrase. Above 4 and below 40 characters"
+            },
+            "options": {
+              "hideConfirmation": true
+            },
+            "visible": true
+          }, {
+            "name": "sslCertKeyBundleFile",
+            "type": "Microsoft.Common.FileUpload",
+            "label": "Key & certificate",
+            "toolTip": "",
+            "constraints": {
+              "required": true,
+              "accept": ".pem"
+            },
+            "options": {
+              "multiple": false,
+              "uploadMode": "file",
+              "openMode": "text",
+              "encoding": "UTF-8"
+            },
+            "visible": true
+          }
+        ]
+      }, {
+        "name": "SecDevSetting",
+        "label": "Security Device Settings",
+        "subLabel": {
+          "preValidation": "Configure Sec Device Settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Security Device Settings",
+        "elements": [{
+            "name": "EnaDisAutoscaleSettings",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Enable/Disable advanced Autoscale settings",
+            "defaultValue": "Enable",
+            "toolTip": "Enable/Disable advanced Autoscale settings",
+            "constraints": {
+              "allowedValues": [{
+                  "label": "Enable",
+                  "value": "Enable"
+                }, {
+                  "label": "Disable",
+                  "value": "Disable"
+                }
+              ]
+            },
+            "visible": true
+          }, {
+            "name": "SecDevResourceGroupName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Security Device Resource group Name",
+            "defaultValue": "",
+            "toolTip": "set the Security Device Resource group Name",
+            "visible": "[equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Enable')]"
+          }, {
+            "name": "SecDevScalesetName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Security Device Scale-set Name",
+            "defaultValue": "",
+            "toolTip": "Set Security Device Scaleset Name",
+            "constraints": {
+              "required": true,
+              "regex": "^[a-z0-9A-Z]{1,30}$",
+              "validationMessage": "Only alphanumeric characters are allowed"
+            },
+            "visible": "[equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Enable')]"
+          }, {
+            "name": "SecDevVirtualNetwork",
+            "type": "Microsoft.Network.VirtualNetworkCombo",
+            "label": {
+              "virtualNetwork": "Virtual network",
+              "subnets": "Subnets"
+            },
+            "toolTip": {
+              "virtualNetwork": "Choose Security Device virtual network",
+              "subnets": "Choose Security Device subnet"
+            },
+            "defaultValue": {
+              "name": "vnet01",
+              "addressPrefixSize": "/16"
+            },
+            "constraints": {
+              "minAddressPrefixSize": "/24"
+            },
+            "options": {
+              "hideExisting": false
+            },
+            "subnets": {
+              "subnet1": {
+                "label": "First subnet",
+                "defaultValue": {
+                  "name": "subnet-1",
+                  "addressPrefixSize": "/24"
+                },
+                "constraints": {
+                  "minAddressPrefixSize": "/24",
+                  "minAddressCount": 12,
+                  "requireContiguousAddresses": true
+                }
+              }
+            },
+            "visible": true
+          }, {
+            "name": "SecDevCount",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Number of discrete security devices",
+            "defaultValue": "0",
+            "toolTip": "",
+            "constraints": {
+              "required": true,
+              "allowedValues": [{
+                  "label": "0",
+                  "value": 0
+                }, {
+                  "label": "1",
+                  "value": 1
+                }, {
+                  "label": "2",
+                  "value": 2
+                }, {
+                  "label": "3",
+                  "value": 3
+                }, {
+                  "label": "4",
+                  "value": 4
+                }, {
+                  "label": "5",
+                  "value": 5
+                }, {
+                  "label": "6",
+                  "value": 6
+                }, {
+                  "label": "7",
+                  "value": 7
+                }, {
+                  "label": "8",
+                  "value": 8
+                }, {
+                  "label": "9",
+                  "value": 9
+                }, {
+                  "label": "10",
+                  "value": 10
+                }
+              ]
+            }
+          }, {
+            "name": "SecDevSection",
+            "type": "Microsoft.Common.Section",
+            "label": "Security Device IP Address",
+            "elements": [{
+                "name": "SecDev1",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 1 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 0))]"
+              }, {
+                "name": "SecDev2",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 2 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 1))]"
+              }, {
+                "name": "SecDev3",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 3 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 2))]"
+              }, {
+                "name": "SecDev4",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Real 4 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 3))]"
+              }, {
+                "name": "SecDev5",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 5 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 4))]"
+              }, {
+                "name": "SecDev6",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 6 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 5))]"
+              }, {
+                "name": "SecDev7",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 7 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 6))]"
+              }, {
+                "name": "SecDev8",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 8 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 7))]"
+              }, {
+                "name": "SecDev9",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 9 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 8))]"
+              }, {
+                "name": "SecDev10",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Security Device 10 IP Address",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true,
+                  "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+                  "validationMessage": "Format should be a valid IPv4 address"
+                },
+                "visible": "[and(equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SecDevSetting').SecDevCount, 9))]"
+              }
+            ],
+            "visible": "[equals(steps('SecDevSetting').EnaDisAutoscaleSettings, 'Disable')]"
+          }, {
+            "name": "SecDevMetric",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Metrics",
+            "defaultValue": "Least connections",
+            "toolTip": "The load balancing metrics you want to use",
+            "constraints": {
+              "allowedValues": [{
+                  "label": "Least connections",
+                  "value": "leastconns"
+                }, {
+                  "label": "Round robin",
+                  "value": "roundrobin"
+                }, {
+                  "label": "Response time",
+                  "value": "response"
+                }
+              ]
+            },
+            "visible": true
+          }, {
+            "name": "SecDevPortNumber",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Port Number for the Decrypted traffic",
+            "defaultValue": "443",
+            "constraints": {
+              "required": true,            
+              "regex": "^([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-5][0-3][0-6])$",
+              "validationMessage": "Format should be valid tcp port 1 to 65536"
+            },
+            "toolTip": "The port number Alteon will use to send the decrypted traffic",
+            "visible": true
+          }, {
+            "name": "BypassCount",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Number of bypass hosts",
+            "defaultValue": "0",
+            "toolTip": "",
+            "constraints": {
+              "required": true,
+              "allowedValues": [{
+                  "label": "0",
+                  "value": 0
+                }, {
+                  "label": "1",
+                  "value": 1
+                }, {
+                  "label": "2",
+                  "value": 2
+                }, {
+                  "label": "3",
+                  "value": 3
+                }, {
+                  "label": "4",
+                  "value": 4
+                }, {
+                  "label": "5",
+                  "value": 5
+                }, {
+                  "label": "6",
+                  "value": 6
+                }, {
+                  "label": "7",
+                  "value": 7
+                }, {
+                  "label": "8",
+                  "value": 8
+                }, {
+                  "label": "9",
+                  "value": 9
+                }, {
+                  "label": "10",
+                  "value": 10
+                }
+              ]
+            },
+            "visible": true
+          }, {
+            "name": "BypassSection",
+            "type": "Microsoft.Common.Section",
+            "label": "Hosts for Security Device Bypass",
+            "elements": [{
+                "name": "Bypass1",
+                "type": "Microsoft.Common.TextBox",
+                "label": "First hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 0)]"
+              }, {
+                "name": "Bypass2",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Second hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 1)]"
+              }, {
+                "name": "Bypass3",
+                "type": "Microsoft.Common.TextBox",
+                "label": "3rd hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 2)]"
+              }, {
+                "name": "Bypass4",
+                "type": "Microsoft.Common.TextBox",
+                "label": "4th hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 3)]"
+              }, {
+                "name": "Bypass5",
+                "type": "Microsoft.Common.TextBox",
+                "label": "5th hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 4)]"
+              }, {
+                "name": "Bypass6",
+                "type": "Microsoft.Common.TextBox",
+                "label": "6 hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 5)]"
+              }, {
+                "name": "Bypass7",
+                "type": "Microsoft.Common.TextBox",
+                "label": "7 hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 6)]"
+              }, {
+                "name": "Bypass8",
+                "type": "Microsoft.Common.TextBox",
+                "label": "8 hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 7)]"
+              }, {
+                "name": "Bypass9",
+                "type": "Microsoft.Common.TextBox",
+                "label": "9th hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 8)]"
+              }, {
+                "name": "Bypass10",
+                "type": "Microsoft.Common.TextBox",
+                "label": "10th hostname to bypass the VAS",
+                "defaultValue": "",
+                "constraints": {
+                  "required": true
+                },
+                "visible": "[greater(steps('SecDevSetting').BypassCount, 9)]"
+              }
+            ],
+            "visible": true
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "location": "[location()]",
+      "AlteonClusterName": "[basics('AlteonClusterName')]",
+      "tagOwnerName": "[basics('AlteonClusterOwnerTagName')]",
+      "tagUserDefinedName": "[basics('AlteonClusterUserDefinedTag').TagName]",
+      "tagUserDefinedValue": "[basics('AlteonClusterUserDefinedTag').TagValue]",
+      "adminUsername": "[steps('VmssInstanceCredentials').adminUsername]",
+      "adminPassword": "[steps('VmssInstanceCredentials').adminPassword.password]",
+      "CloudDeviceId": "[steps('GelSettings').CloudDeviceId]",
+      "PrimaryLlsIP": "[steps('GelSettings').PrimaryLlsIP]",
+      "SecondaryLlsIP": "[steps('GelSettings').SecondaryLlsIP]",
+      "ThroughputLicense": "[steps('GelSettings').ThroughputLicense]",
+      "EntitlementId": "[steps('GelSettings').EntitlementId]",
+      "AddOnSubsciption": "[steps('GelSettings').AddOnSubsciption]",
+      "PublicIpName": "[steps('ScalesetSettings').LbPublicIpAddress.publicIpAddressName]",
+      "PublicIpDomainName": "[steps('ScalesetSettings').LbPublicIpAddress]",
+      "InstanceSize": "[steps('ScalesetSettings').InstanceSize]",
+      "MinNumOfVMs": "[steps('ScalesetSettings').MinNumOfVMs]",
+      "MaxNumOfVMs": "[steps('ScalesetSettings').MaxNumOfVMs]",
+      "ScalesetScaleOut": "[steps('ScalesetSettings').ScalesetScaleOut]",
+      "ScalesetScaleIn": "[steps('ScalesetSettings').ScalesetScaleIn]",
+      "ClientID": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.ClientID]",
+      "ClientSecret": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.ClientSecret]",
+      "TenantID": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.TenantID]",
+      "realsResourceGroupName": "[steps('SLBSetting').RealsVirtualNetwork]",
+      "RealsVirtualNetwork": "[steps('SLBSetting').RealsVirtualNetwork]",
+      "RealsScalesetName": "[steps('SLBSetting').RealsScalesetName]",
+      "RealsCount": "[string(steps('SLBSetting').RealsCount)]",
+      "SLBMetric": "[steps('SLBSetting').SLBMetric]",
+      "Real1": "[steps('SLBSetting').RealServerSection.Real1]",
+      "Real2": "[steps('SLBSetting').RealServerSection.Real2]",
+      "Real3": "[steps('SLBSetting').RealServerSection.Real3]",
+      "Real4": "[steps('SLBSetting').RealServerSection.Real4]",
+      "Real5": "[steps('SLBSetting').RealServerSection.Real5]",
+      "Real6": "[steps('SLBSetting').RealServerSection.Real6]",
+      "Real7": "[steps('SLBSetting').RealServerSection.Real7]",
+      "Real8": "[steps('SLBSetting').RealServerSection.Real8]",
+      "Real9": "[steps('SLBSetting').RealServerSection.Real9]",
+      "Real10": "[steps('SLBSetting').RealServerSection.Real10]",
+      "SlbPortNumber": "[steps('SLBSetting').SlbPortNumber]",
+      "SslPrivateKeyPassphrase": "[steps('SLBSetting').sslPassphrase]",
+      "sslCertNkeyFile": "[steps('SLBSetting').sslCertKeyBundleFile]",
+      "SecDevResourceGroupName": "[steps('SecDevSetting').SecDevResourceGroupName]",
+      "SecDevVirtualNetwork": "[steps('SecDevSetting').SecDevVirtualNetwork]",
+      "SecDevScalesetName": "[steps('SecDevSetting').SecDevScalesetName]",
+      "SecDevCount": "[string(steps('SecDevSetting').SecDevCount)]",
+      "SecDevMetric": "[steps('SecDevSetting').SecDevMetric]",
+      "SecDev1": "[steps('SecDevSetting').SecDevSection.SecDev1]",
+      "SecDev2": "[steps('SecDevSetting').SecDevSection.SecDev2]",
+      "SecDev3": "[steps('SecDevSetting').SecDevSection.SecDev3]",
+      "SecDev4": "[steps('SecDevSetting').SecDevSection.SecDev4]",
+      "SecDev5": "[steps('SecDevSetting').SecDevSection.SecDev5]",
+      "SecDev6": "[steps('SecDevSetting').SecDevSection.SecDev6]",
+      "SecDev7": "[steps('SecDevSetting').SecDevSection.SecDev7]",
+      "SecDev8": "[steps('SecDevSetting').SecDevSection.SecDev8]",
+      "SecDev9": "[steps('SecDevSetting').SecDevSection.SecDev9]",
+      "SecDev10": "[steps('SecDevSetting').SecDevSection.SecDev10]",
+      "SecDevPortNumber": "[steps('SecDevSetting').SecDevPortNumber]"
+    }
+  }
+}
