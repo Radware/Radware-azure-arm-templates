@@ -180,34 +180,14 @@
           }
         ]
       }, {
-        "name": "Alteon settings",
-        "label": "Alteon settings",
+        "name": "ScalesetSettings",
+        "label": "Scaleset settings",
         "subLabel": {
           "preValidation": "Configure Alteon cluster",
           "postValidation": "Done"
         },
-        "bladeTitle": "Advanced Alteon Settings",
+        "bladeTitle": "Advanced Scaleset Settings",
         "elements": [{
-            "name": "LbPublicIpAddress",
-            "type": "Microsoft.Network.PublicIpAddressCombo",
-            "label": {
-              "publicIpAddress": "Public IP address for Alteon cluster",
-              "domainNameLabel": "Hostname name Alteon cluster"
-            },
-            "toolTip": {
-              "publicIpAddress": "Public IP address for Alteon cluster"
-            },
-            "defaultValue": {
-              "publicIpAddressName": "[concat(basics('AlteonClusterName'), '-ip')]",
-              "domainNameLabel": "[concat(basics('AlteonClusterName'), '-ip')]"
-            },
-            "options": {
-              "hideNone": true,
-              "hideExisting": true,
-              "hideDomainNameLabel": true
-            },
-            "visible": false
-          }, {
             "name": "VirtualNetwork",
             "type": "Microsoft.Network.VirtualNetworkCombo",
             "label": {
@@ -244,11 +224,31 @@
             },
             "visible": true
           }, {
+            "name": "LbPublicIpAddress",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP address for Alteon cluster",
+              "domainNameLabel": "Hostname name Alteon cluster"
+            },
+            "toolTip": {
+              "publicIpAddress": "Public IP address for Alteon cluster"
+            },
+            "defaultValue": {
+              "publicIpAddressName": "[concat(basics('AlteonClusterName'), '-ip')]",
+              "domainNameLabel": "[concat(basics('AlteonClusterName'), '-ip')]"
+            },
+            "options": {
+              "hideNone": true,
+              "hideExisting": true,
+              "hideDomainNameLabel": true
+            },
+            "visible": false
+          }, {
             "name": "EnaDisScalesetSettings",
             "type": "Microsoft.Common.OptionsGroup",
-            "label": "Enable/Disable Alteon Scaleset settings",
+            "label": "Enable/Disable advanced Scaleset settings",
             "defaultValue": "Disable",
-            "toolTip": "Enable/Disable Alteon Scaleset settings",
+            "toolTip": "Enable/Disable advanced Scaleset settings",
             "constraints": {
               "allowedValues": [{
                   "label": "Enable",
