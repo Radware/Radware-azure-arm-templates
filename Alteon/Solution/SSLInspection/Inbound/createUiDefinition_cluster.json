@@ -864,7 +864,7 @@
                 "visible": "[greater(steps('SecDevSetting').BypassCount, 9)]"
               }
             ],
-            "visible": true
+            "visible": "[greater(steps('SecDevSetting').BypassCount, 0)]"
           }
         ]
       }, {
