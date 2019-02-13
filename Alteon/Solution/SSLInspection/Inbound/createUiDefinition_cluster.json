@@ -208,15 +208,15 @@
             },
             "visible": false
           }, {
-            "name": "VirtualNetwork",
+            "name": "GeneralVirtualNetwork",
             "type": "Microsoft.Network.VirtualNetworkCombo",
             "label": {
-              "virtualNetwork": "Alteon Virtual network",
+              "virtualNetwork": "Virtual network",
               "subnets": "Subnets"
             },
             "toolTip": {
-              "virtualNetwork": "Choose Alteon virtual network",
-              "subnets": "Choose Alteon subnet"
+              "virtualNetwork": "Choose virtual network (It will be used for all applications resources)",
+              "subnets": "Choose subnet"
             },
             "defaultValue": {
               "name": "vnet01",
@@ -868,13 +868,13 @@
           }
         ]
       }, {
-        "name": "SLBSetting",
-        "label": "SLB settings",
+        "name": "AppSettings",
+        "label": "Application settings",
         "subLabel": {
-          "preValidation": "Configure SLB settings",
+          "preValidation": "Configure Application settings",
           "postValidation": "Done"
         },
-        "bladeTitle": "SLB settings",
+        "bladeTitle": "App settings",
         "elements": [{
             "name": "EnaDisAutoscaleSettings",
             "type": "Microsoft.Common.OptionsGroup",
@@ -898,7 +898,7 @@
             "label": "Real Servers Resource group Name",
             "defaultValue": "",
             "toolTip": "Set the Real Servers Resource group Name",
-            "visible": "[equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Enable')]"
+            "visible": "[equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Enable')]"
           }, {
             "name": "RealsScalesetName",
             "type": "Microsoft.Common.TextBox",
@@ -910,7 +910,7 @@
               "regex": "^[a-z0-9A-Z]{1,30}$",
               "validationMessage": "Only alphanumeric characters are allowed"
             },
-            "visible": "[equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Enable')]"
+            "visible": "[equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Enable')]"
           }, {
             "name": "RealsCount",
             "type": "Microsoft.Common.DropDown",
@@ -969,7 +969,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 0))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 0))]"
               }, {
                 "name": "Real2",
                 "type": "Microsoft.Common.TextBox",
@@ -980,7 +980,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 1))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 1))]"
               }, {
                 "name": "Real3",
                 "type": "Microsoft.Common.TextBox",
@@ -991,7 +991,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 2))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 2))]"
               }, {
                 "name": "Real4",
                 "type": "Microsoft.Common.TextBox",
@@ -1002,7 +1002,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 3))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 3))]"
               }, {
                 "name": "Real5",
                 "type": "Microsoft.Common.TextBox",
@@ -1013,7 +1013,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 4))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 4))]"
               }, {
                 "name": "Real6",
                 "type": "Microsoft.Common.TextBox",
@@ -1024,7 +1024,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 5))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 5))]"
               }, {
                 "name": "Real7",
                 "type": "Microsoft.Common.TextBox",
@@ -1035,7 +1035,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 6))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 6))]"
               }, {
                 "name": "Real8",
                 "type": "Microsoft.Common.TextBox",
@@ -1046,7 +1046,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 7))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 7))]"
               }, {
                 "name": "Real9",
                 "type": "Microsoft.Common.TextBox",
@@ -1057,7 +1057,7 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 8))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 8))]"
               }, {
                 "name": "Real10",
                 "type": "Microsoft.Common.TextBox",
@@ -1068,10 +1068,10 @@
                   "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
                   "validationMessage": "Format should be a valid IPv4 address"
                 },
-                "visible": "[and(equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable'), greater(steps('SLBSetting').RealsCount, 9))]"
+                "visible": "[and(equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable'), greater(steps('AppSettings').RealsCount, 9))]"
               }
             ],
-            "visible": "[equals(steps('SLBSetting').EnaDisAutoscaleSettings, 'Disable')]"
+            "visible": "[equals(steps('AppSettings').EnaDisAutoscaleSettings, 'Disable')]"
           }, {
             "name": "SLBMetric",
             "type": "Microsoft.Common.DropDown",
@@ -1122,7 +1122,8 @@
       "location": "[location()]",
       "AlteonClusterName": "[basics('AlteonClusterName')]",
       "tagOwnerName": "[basics('AlteonClusterOwnerTagName')]",
-      "VirtualNetwork": "[basics('VirtualNetwork')]",
+      "RealsVirtualNetwork": "[steps('AlteonSettings').GeneralVirtualNetwork]",
+      "SecDevVirtualNetwork": "[steps('AlteonSettings').GeneralVirtualNetwork]",
       "tagUserDefinedName": "[basics('AlteonClusterUserDefinedTag').TagName]",
       "tagUserDefinedValue": "[basics('AlteonClusterUserDefinedTag').TagValue]",
       "CloudDeviceId": "[steps('GelSettings').CloudDeviceId]",
@@ -1141,23 +1142,23 @@
       "ClientID": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.ClientID]",
       "ClientSecret": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.ClientSecret]",
       "TenantID": "[steps('ActiveDirSetting').ActiveDirectoryCredentials.TenantID]",
-      "realsResourceGroupName": "[steps('SLBSetting').realsResourceGroupName]",
-      "RealsScalesetName": "[steps('SLBSetting').RealsScalesetName]",
-      "RealsCount": "[string(steps('SLBSetting').RealsCount)]",
-      "SLBMetric": "[steps('SLBSetting').SLBMetric]",
-      "Real1": "[steps('SLBSetting').RealServerSection.Real1]",
-      "Real2": "[steps('SLBSetting').RealServerSection.Real2]",
-      "Real3": "[steps('SLBSetting').RealServerSection.Real3]",
-      "Real4": "[steps('SLBSetting').RealServerSection.Real4]",
-      "Real5": "[steps('SLBSetting').RealServerSection.Real5]",
-      "Real6": "[steps('SLBSetting').RealServerSection.Real6]",
-      "Real7": "[steps('SLBSetting').RealServerSection.Real7]",
-      "Real8": "[steps('SLBSetting').RealServerSection.Real8]",
-      "Real9": "[steps('SLBSetting').RealServerSection.Real9]",
-      "Real10": "[steps('SLBSetting').RealServerSection.Real10]",
-      "SlbPortNumber": "[steps('SLBSetting').SlbPortNumber]",
-      "SslPrivateKeyPassphrase": "[steps('SLBSetting').sslPassphrase]",
-      "sslCertNkeyFile": "[steps('SLBSetting').sslCertKeyBundleFile]",
+      "realsResourceGroupName": "[steps('AppSettings').realsResourceGroupName]",
+      "RealsScalesetName": "[steps('AppSettings').RealsScalesetName]",
+      "RealsCount": "[string(steps('AppSettings').RealsCount)]",
+      "SLBMetric": "[steps('AppSettings').SLBMetric]",
+      "Real1": "[steps('AppSettings').RealServerSection.Real1]",
+      "Real2": "[steps('AppSettings').RealServerSection.Real2]",
+      "Real3": "[steps('AppSettings').RealServerSection.Real3]",
+      "Real4": "[steps('AppSettings').RealServerSection.Real4]",
+      "Real5": "[steps('AppSettings').RealServerSection.Real5]",
+      "Real6": "[steps('AppSettings').RealServerSection.Real6]",
+      "Real7": "[steps('AppSettings').RealServerSection.Real7]",
+      "Real8": "[steps('AppSettings').RealServerSection.Real8]",
+      "Real9": "[steps('AppSettings').RealServerSection.Real9]",
+      "Real10": "[steps('AppSettings').RealServerSection.Real10]",
+      "SlbPortNumber": "[steps('AppSettings').SlbPortNumber]",
+      "SslPrivateKeyPassphrase": "[steps('AppSettings').sslPassphrase]",
+      "sslCertNkeyFile": "[steps('AppSettings').sslCertKeyBundleFile]",
       "SecDevResourceGroupName": "[steps('SecDevSetting').SecDevResourceGroupName]",
       "SecDevScalesetName": "[steps('SecDevSetting').SecDevScalesetName]",
       "SecDevCount": "[string(steps('SecDevSetting').SecDevCount)]",
