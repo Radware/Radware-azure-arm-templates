@@ -23,13 +23,14 @@
     },
     "adminUsername": {
       "type": "string",
-      "defaultValue": "radware",
+      "defaultValue": "radrad",
       "metadata": {
         "description": "Admin username"
       }
     },
     "adminPassword": {
       "type": "securestring",
+      "defaultValue": "IloveRadwareAzure!",
       "metadata": {
         "description": "Admin password"
       }
