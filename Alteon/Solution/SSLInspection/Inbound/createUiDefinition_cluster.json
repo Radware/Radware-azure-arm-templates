@@ -188,42 +188,6 @@
         },
         "bladeTitle": "Advanced Alteon Settings",
         "elements": [{
-            "name": "VirtualNetwork",
-            "type": "Microsoft.Network.VirtualNetworkCombo",
-            "label": {
-              "virtualNetwork": "Alteon Virtual network",
-              "subnets": "Subnets"
-            },
-            "toolTip": {
-              "virtualNetwork": "Choose Alteon virtual network",
-              "subnets": "Choose Alteon subnet"
-            },
-            "defaultValue": {
-              "name": "vnet01",
-              "addressPrefixSize": "/16"
-            },
-            "constraints": {
-              "minAddressPrefixSize": "/24"
-            },
-            "options": {
-              "hideExisting": false
-            },
-            "subnets": {
-              "subnet1": {
-                "label": "First subnet",
-                "defaultValue": {
-                  "name": "subnet-1",
-                  "addressPrefixSize": "/24"
-                },
-                "constraints": {
-                  "minAddressPrefixSize": "/24",
-                  "minAddressCount": 12,
-                  "requireContiguousAddresses": true
-                }
-              }
-            },
-            "visible": true
-          }, {
             "name": "LbPublicIpAddress",
             "type": "Microsoft.Network.PublicIpAddressCombo",
             "label": {
