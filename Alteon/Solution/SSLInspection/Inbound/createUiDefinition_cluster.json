@@ -180,13 +180,13 @@
           }
         ]
       }, {
-        "name": "ScalesetSettings",
-        "label": "Scaleset settings",
+        "name": "Alteon settings",
+        "label": "Alteon settings",
         "subLabel": {
           "preValidation": "Configure Alteon cluster",
           "postValidation": "Done"
         },
-        "bladeTitle": "Advanced Scaleset Settings",
+        "bladeTitle": "Advanced Alteon Settings",
         "elements": [{
             "name": "LbPublicIpAddress",
             "type": "Microsoft.Network.PublicIpAddressCombo",
@@ -207,12 +207,48 @@
               "hideDomainNameLabel": true
             },
             "visible": false
+          },{
+            "name": "VirtualNetwork",
+            "type": "Microsoft.Network.VirtualNetworkCombo",
+            "label": {
+              "virtualNetwork": "Alteon Virtual network",
+              "subnets": "Subnets"
+            },
+            "toolTip": {
+              "virtualNetwork": "Choose Alteon virtual network",
+              "subnets": "Choose Alteon subnet"
+            },
+            "defaultValue": {
+              "name": "vnet01",
+              "addressPrefixSize": "/16"
+            },
+            "constraints": {
+              "minAddressPrefixSize": "/24"
+            },
+            "options": {
+              "hideExisting": false
+            },
+            "subnets": {
+              "subnet1": {
+                "label": "First subnet",
+                "defaultValue": {
+                  "name": "subnet-1",
+                  "addressPrefixSize": "/24"
+                },
+                "constraints": {
+                  "minAddressPrefixSize": "/24",
+                  "minAddressCount": 12,
+                  "requireContiguousAddresses": true
+                }
+              }
+            },
+            "visible": true
           }, {
             "name": "EnaDisScalesetSettings",
             "type": "Microsoft.Common.OptionsGroup",
-            "label": "Enable/Disable advanced Scaleset settings",
+            "label": "Enable/Disable Alteon Scaleset settings",
             "defaultValue": "Disable",
-            "toolTip": "Enable/Disable advanced Scaleset settings",
+            "toolTip": "Enable/Disable Alteon Scaleset settings",
             "constraints": {
               "allowedValues": [{
                   "label": "Enable",
