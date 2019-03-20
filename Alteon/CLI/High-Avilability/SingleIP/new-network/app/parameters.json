@@ -17,9 +17,6 @@
         "storageAccountName": {
             "value": "alteonstorage2644"
         },
-        "vmSize": {
-            "value": "Standard_D2"
-        },
         "vmCount": {
             "value": "2"
         },
@@ -79,6 +76,9 @@
         },
         "real10": {
             "value": "none"
-        }        
+        },
+        "vmSize": {
+            "value": "Standard_D2"
+        }  
     }
 }
