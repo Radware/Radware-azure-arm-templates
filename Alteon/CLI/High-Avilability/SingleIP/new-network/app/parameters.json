@@ -40,6 +40,45 @@
         },
         "DNSServerIP": {
             "value": "8.8.8.8"
-        }
+        },
+        "slbPortNumber": {
+            "value": "80"
+        },
+        "slbMetric": {
+            "value": "leastconns"
+        },
+        "realsCount": {
+            "value": "0"
+        },
+        "real1": {
+            "value": "none"
+        },
+        "real2": {
+            "value": "none"
+        },
+        "real3": {
+            "value": "none"
+        },
+        "real4": {
+            "value": "none"
+        },
+        "real5": {
+            "value": "none"
+        },
+        "real6": {
+            "value": "none"
+        },
+        "real7": {
+            "value": "none"
+        },
+        "real8": {
+            "value": "none"
+        },
+        "real9": {
+            "value": "none"
+        },
+        "real10": {
+            "value": "none"
+        }        
     }
 }
