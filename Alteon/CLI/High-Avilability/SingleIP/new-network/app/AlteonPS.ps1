@@ -67,7 +67,7 @@ Write-Host "Please fill the following parameters"
 
 ###Virtual machine name###
 $vmname = $(
- $VMNameselection = read-host "Virtual machine name (Virtual Machine name prefix VA name will be prefix followed by a number 1 or 2) <"$parameterFilePath.parameters.VMPrefixName.value" is default>"
+ $VMNameselection = read-host "Virtual machine name (VA name will be prefix followed by a number 1 or 2) <"$parameterFilePath.parameters.VMPrefixName.value" is default>"
  if ($VMNameselection) {$VMNameselection} else {$parameterFilePath.parameters.VMPrefixName.value}
 )
 ##########################
