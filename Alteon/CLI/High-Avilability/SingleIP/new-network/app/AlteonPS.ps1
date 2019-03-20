@@ -247,7 +247,7 @@ Write-Host " ";
 $ParametersObj = @{
     storageAccountName = $stgaccname
     ClientID = "$ClientID"
-    TenantID = "$AzureSubscriptionName.TenantID"
+    TenantID = $AzureSubscriptionName.TenantID
     dnsNameForPublicIP1 = "$dnsNameForPublicIP1"
     dnsNameForPublicIP2 = "$dnsNameForPublicIP2"
     DNSServerIP = "$DNSServerIP"  
