@@ -1,8 +1,11 @@
+Write-Host "Welcome to Radware Alteon High Avilability Deployment"
+
 # Set the Execution policy for "RemoteSigned" in order to launch the script
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
 # Install Azure resource manager cmdlet
 Install-Module -Name AzureRM -AllowClobber
 
+Write-Host "Checking if you loged in to Azure.."
 try {
     Get-AzureRmSubscription | Out-Null
     Write-Host "Already logged in"
@@ -17,7 +20,7 @@ $parameterFilePath = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/R
 $templateFilePath = "https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/CLI/High-Avilability/SingleIP/new-network/app/template.json"
 
 
-Write-Host "Welcome to radware Alteon Deployment"
+
 
 $SubIdCount =  Get-AzureRmSubscription | Measure-Object -Line
 $Subid = Get-AzureRmSubscription
@@ -49,36 +52,25 @@ function Show-Menu
 
     Write-Host "Q: Press 'Q' to quit."
 
-    $SubSelection = Read-Host "Please make a selection"
+    $SubSelection = Read-Host "Please select the Subscription you wish to use"
 
     if ($SubSelection -eq 'Q') { Return } Else { $Menu.$SubSelection }
 
 }
-$SubscriptionName = Show-Menu -Title 'Subscription Choose'
-Write-Host "Choosen subscription: $SubscriptionName
-
-"
+$SubscriptionName = Show-Menu -Title 'Subscription Menu'
+Write-Host "The selected subscription was: $SubscriptionName"
 }
  
+$admpw = convertto-securestring $parameterFilePath.parameters.adminPassword.value -asplaintext -force
 
 Write-Host "Please fill the following parameters"
 
 ###Virtual machine name###
 $vmname = $(
- $VMNameselection = read-host "Virtual machine name <"$parameterFilePath.parameters.virtualMachineName.value" is default>"
- if ($VMNameselection) {$VMNameselection} else {$parameterFilePath.parameters.virtualMachineName.value}
+ $VMNameselection = read-host "Virtual machine name (Virtual Machine name prefix VA name will be prefix followed by a number 1 or 2) <"$parameterFilePath.parameters.VMPrefixName.value" is default>"
+ if ($VMNameselection) {$VMNameselection} else {$parameterFilePath.parameters.VMPrefixName.value}
 )
 ##########################
-##########################
-
-###AdminUsername###
-$Username = $(
- $adminUsernameselection = read-host "Admin Username <"$parameterFilePath.parameters.adminUsername.value" is default>"
- if ($adminUsernameselection) {$adminUsernameselection} else {$parameterFilePath.parameters.adminUsername.value}
-)
-##########################
-###Virtual machine password###
-$parameterFilePath.parameters.adminPassword.value =  Read-Host 'Virtual machine password' -assecurestring
 
 ###Resource group name###
 
@@ -90,54 +82,92 @@ $resourceGroupName = $(
 
 ###Resource group location###
 
-$resourceGroupLocation = $(
- $resourceGroupLocationselection = read-host 'Resource group location <centralus is default>'
- if ($resourceGroupLocationselection) {$resourceGroupLocationselection} else {'centralus'}
+$location = Get-Azurermlocation | Select-Object -Property Location
+$linenumber = 1
+$location |
+   ForEach-Object {New-Object psObject -Property @{'Number'=$linenumber;'Location'= $_.location;};$linenumber ++ } -outvariable choosemenu | out-null
+    
+function Show-Menu
+{
+    param (
+        [string]$Title = 'Please select the location you wish to use'
+    )
+    Clear-Host
+    Write-Host "================ $Title ================"
+
+    $Menu = @{}
+
+    $choosemenu -replace '@.*Location=' -replace '}' | ForEach-Object -Begin {$i = 1} { 
+        Write-Host " $i. $_`  " 
+        $Menu.add("$i",$_)
+        $i++
+    }
+
+    Write-Host "Q: Press 'Q' to quit."
+
+    $LocSelection = Read-Host "Please make a selection"
+
+    if ($LocSelection -eq 'Q') { Return } Else { $Menu.$LocSelection }
+}
+
+$resourceGroupLocation = Show-Menu -Title 'Location  Menu'
+Write-Host "The selected location was: $resourceGroupLocation"
+
+
+
+
+##########################
+
+
+
+###DNS Name for public IP 1###
+$dnsNameForPublicIP1 = $(
+ $dnsNameForPublicIP1selection = read-host "Specify DNS name for PublicIP1  <"$parameterFilePath.parameters.dnsNameForPublicIP1.value" is default>"
+ if ($dnsNameForPublicIP1selection) {$dnsNameForPublicIP1selection} else {$parameterFilePath.parameters.dnsNameForPublicIP1.value}
 )
 ##########################
 
-###Vnet name###
-
-$vnetname = $(
-$vnetnameselection = read-host "Virtual network name <"$parameterFilePath.parameters.virtualNetworkName.value" is default>"
- if ($vnetnameselection) {$vnetnameselection} else {$parameterFilePath.parameters.virtualNetworkName.value}
+###DNS Name for public IP 2###
+$dnsNameForPublicIP2 = $(
+ $dnsNameForPublicIP2selection = read-host "Specify DNS name for PublicIP2  <"$parameterFilePath.parameters.dnsNameForPublicIP2.value" is default>"
+ if ($dnsNameForPublicIP2selection) {$dnsNameForPublicIP2selection} else {$parameterFilePath.parameters.dnsNameForPublicIP2.value}
+)
+##########################
+###DNSServerIP###
+$DNSServerIP = $(
+ $DNSServerIPselection = read-host "Specify Public DNS server  <"$parameterFilePath.parameters.DNSServerIP.value" is default>"
+ if ($DNSServerIPselection) {$DNSServerIPselection} else {$parameterFilePath.parameters.DNSServerIP.value}
 )
 
 ##########################
-
-###Vnet Address space###
-$addrpref = $(
-$vnetaddrprefselection = read-host "Vnet address space <"$parameterFilePath.parameters.addressPrefixes.value[0]" is default>"
- if ($vnetaddrprefselection) {$vnetaddrprefselection} else {$parameterFilePath.parameters.addressPrefixes.value[0]}
-)
-$parameterFilePath.parameters.addressPrefixes.value[0] ="$addrpref"
-##########################
-
-
-###Alteon Subnet name###
-
-
-$subnetname = $(
-$subnetnameselection = read-host "Sunet name <"$parameterFilePath.parameters.subnetName.value" is default>"
- if ($subnetnameselection) {$subnetnameselection} else {$parameterFilePath.parameters.subnetName.value}
-)
-$parameterFilePath.parameters.subnets.value[0].name = "$subnetname"
-
-
-##########################
-
-
-###Alteon Subnet###
-$parameterFilePath.parameters.subnets.value[0].properties.addressPrefix = $( $alteonsubnetselection = read-host "Subnet prefix <"$parameterFilePath.parameters.subnets.value[0].properties.addressPrefix" is default>"
- if ("$alteonsubnetselection") {"$alteonsubnetselection"} else {$parameterFilePath.parameters.subnets.value[0].properties.addressPrefix}
-)
-##########################
-
 
 $date = date
-$stgaccname = $parameterFilePath.parameters.virtualMachineName.value.ToLower() +"diag"+$date.second
-$stgaccID = "Microsoft.Storage/storageAccounts/"+$stgaccname
+$stgaccname = $parameterFilePath.parameters.VMPrefixName.value.ToLower() +"diag"+$date.second
 #######################################################
+
+Write-Host "Please provide the following parameters for High avilability:"
+Start-Sleep -Seconds 5 | out-null
+$DisplayName = Read-Host "Specify DisplayName (For example: "AlteonHA")"
+$HomePage =  Read-Host "Specify HomePage (For example: "https://ha.radware.com/alteon")"
+$IdentifierUris = Read-Host "Specify Identifier URL (For example: "https://ha.radware.com/alteon")"
+$ClientSecret = Read-Host 'Specify Client Password' -AsSecureString
+
+
+$AzureSubscriptionName = Get-AzureRmSubscription -SubscriptionName $SubscriptionName 
+$AzureSubscriptionName| Select-AzureRmSubscription | out-null
+$AppReg = New-AzureRmADApplication -DisplayName $DisplayName -HomePage $HomePage -IdentifierUris  $IdentifierUris -Password $ClientSecret
+$ClientID = $AppReg.ApplicationId.Guid
+New-AzureRmADServicePrincipal -ApplicationId $ClientID 
+Write-Output 'Waiting for ClientID registration'
+Start-Sleep -Seconds 40 | out-null
+New-AzureRmRoleAssignment -RoleDefinitionName Contributor -ServicePrincipalName $ClientID | out-null
+
+
+
+#####################################################################################################################
+
+
+
 
 Function RegisterRP {
     Param(
@@ -176,15 +206,22 @@ if($resourceProviders.length) {
 #Create or check for existing resource group
 $resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
 if(!$resourceGroup) {
-    Write-Host "Resource group '$resourceGroupName' does not exist. Creating now resource group: $resourceGroupName" ;
+    Write-Host "Resource group '$resourceGroupName' does not exist in location '$resourceGroupLocation'. Creating now resource group: $resourceGroupName" ;
     if(!$resourceGroupLocation) {
         $resourceGroupLocation
     }
     Write-Host "Creating resource group '$resourceGroupName' in location '$resourceGroupLocation'";
-    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation
+    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation 
 } else{
     Write-Host "Using existing resource group '$resourceGroupName'";
 }
+
+
+Write-Host "When the deployment will be completed, Your alteons will be avilable at:";
+Write-Host "";
+Write-Host "";
+Write-Host "https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host "https://$dnsNameForPublicIP2.$resourceGroupLocation.cloudapp.azure.com:8443/";
 
 # Start the deployment
 Write-Host "Starting deployment...";
@@ -192,57 +229,42 @@ Write-Host "Starting deployment...";
 
 
 
-
-################Array converstion##########################
-$list = "networkSecurityGroupRules", "subnets"
-foreach ($var in $list) {
-    $arr = New-Object System.Collections.ArrayList
-    For ($i=0; $i -lt $parameterFilePath.parameters.($var).value.Count ; $i++) {
-        foreach ($entry in $parameterFilePath.parameters.($var).value[($i)] | Get-Member -MemberType Properties | Select-Object Name ) {
-            if (($entry.name) -eq "properties" ) {
-                foreach ($entry2 in $parameterFilePath.parameters.($var).value[($i)].($entry.name) | Get-Member -MemberType Properties | Select-Object Name ) {
-                    $hasht+=@{($entry2).name = ($parameterFilePath.parameters.($var).value[($i)].($entry.name).($entry2.Name))}
-                }
-                $arr_tmp += @{properties=$hasht}
-                Remove-Variable hasht
-            } else {
-                $arr_tmp += @{$entry.name = $parameterFilePath.parameters.($var).value[($i)].($entry.name)}
-            }
-        }
-        #$arr_tmp
-        $arr+=$arr_tmp
-        Remove-Variable arr_tmp        
-    }
-    New-Variable -Name "$var" -Value $arr
-    Remove-Variable arr
-}
-
-############################################################
-
 $ParametersObj = @{
-    diagnosticsStorageAccountName = $stgaccname
-    diagnosticsStorageAccountId = $stgaccID    
-    virtualMachineRG = "$resourceGroupName"
-    adminUsername = "$Username"
-    #adminPassword = $parameterFilePath.parameters.adminPassword.value
-    networkSecurityGroupRules = $networkSecurityGroupRules
-    addressPrefixes = $parameterFilePath.parameters.addressPrefixes.value
-    subnets = $subnets
-    networkSecurityGroupName = $parameterFilePath.parameters.networkSecurityGroupName.value
-    networkInterfaceName = $parameterFilePath.parameters.networkInterfaceName.value
-    virtualNetworkName = "$vnetname"
-    virtualMachineName =  "$vmname"
-    subnetName = "$subnetname"
-    publicIpAddressName = $parameterFilePath.parameters.publicIpAddressName.value
-    publicIpAddressType = $parameterFilePath.parameters.publicIpAddressType.value
-    publicIpAddressSku = $parameterFilePath.parameters.publicIpAddressSku.value
-    osDiskType =  $parameterFilePath.parameters.osDiskType.value
-    virtualMachineSize =  $parameterFilePath.parameters.virtualMachineSize.value
-    diagnosticsStorageAccountKind = $parameterFilePath.parameters.diagnosticsStorageAccountKind.value
-    diagnosticsStorageAccountType = $parameterFilePath.parameters.diagnosticsStorageAccountType.value
+    storageAccountName = $stgaccname
+    ClientID = "$ClientID"
+    TenantID = "$AzureSubscriptionName.TenantID"
+    dnsNameForPublicIP1 = "$dnsNameForPublicIP1"
+    dnsNameForPublicIP2 = "$dnsNameForPublicIP2"
+    DNSServerIP = "$DNSServerIP"  
+    vmCount = $parameterFilePath.parameters.vmCount.value
+    VMPrefixName =  "$vmname"
+    vmSize =  $parameterFilePath.parameters.vmSize.value
 }
 
 
 
 
-New-AzureRmResourceGroupDeployment -TemplateUri $templateFilePath -TemplateParameterObject $ParametersObj -adminPassword $parameterFilePath.parameters.adminPassword.value  -ResourceGroupName $resourceGroupName -location $resourceGroupLocation;
+New-AzureRmResourceGroupDeployment -TemplateUri $templateFilePath -TemplateParameterObject $ParametersObj -adminPassword $admpw -adminUsername $parameterFilePath.parameters.adminUsername.value  -ResourceGroupName $resourceGroupName -location $resourceGroupLocation -ClientSecret $ClientSecret
+
+
+
+Write-Host "Your alteon's is accessible via:";
+Write-Host "";
+Write-Host "";
+Write-Host "https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host "https://$dnsNameForPublicIP2.$resourceGroupLocation.cloudapp.azure.com:8443/";
+
+
+
+
+Write-Host "If Internet explorer is installed on your station, It will open autmaticly and browse to your Alteon's:";
+
+Write-Host "Opening Internet Expolrer.....";
+Start-Sleep -Seconds 2 | out-null
+
+$OpenInBackgroundTab = 0x1000;
+$OpenIE=new-object -com internetexplorer.application
+$OpenIE.navigate2("https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/")
+$OpenIE.navigate2("https://$dnsNameForPublicIP2.$resourceGroupLocation.cloudapp.azure.com:8443/", $OpenInBackgroundTab)
+$OpenIE.visible=$true
+
