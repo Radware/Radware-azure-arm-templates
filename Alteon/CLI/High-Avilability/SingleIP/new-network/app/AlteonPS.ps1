@@ -1,4 +1,6 @@
+
 Write-Host "Welcome to Radware Alteon High Avilability Deployment"
+
 
 # Set the Execution policy for "RemoteSigned" in order to launch the script
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
@@ -15,11 +17,11 @@ try {
       Login-AzureRmAccount
     }
 
-
+$adm = "admin"
 $parameterFilePath = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/CLI/High-Avilability/SingleIP/new-network/app/parameters.json"
 $templateFilePath = "https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/CLI/High-Avilability/SingleIP/new-network/app/template.json"
 
-
+get-random -Minimum 100 -Maximum 9999 -OutVariable rand | out-null
 
 
 $SubIdCount =  Get-AzureRmSubscription | Measure-Object -Line
@@ -65,6 +67,7 @@ $admpw = convertto-securestring $parameterFilePath.parameters.adminPassword.valu
 
 Write-Host "Please fill the following parameters"
 
+$parameterFilePath.parameters.VMPrefixName.value = $parameterFilePath.parameters.VMPrefixName.value +$rand
 ###Virtual machine name###
 $vmname = $(
  $VMNameselection = read-host "Virtual machine name (VA name will be prefix followed by a number 1 or 2) <"$parameterFilePath.parameters.VMPrefixName.value" is default>"
@@ -141,8 +144,8 @@ $DNSServerIP = $(
 
 ##########################
 
-$date = date
-$stgaccname = $parameterFilePath.parameters.VMPrefixName.value.ToLower() +"diag"+$date.second
+get-random -Minimum 100 -Maximum 9999 -OutVariable rand | out-null
+$stgaccname = $parameterFilePath.parameters.VMPrefixName.value.ToLower() +"diag"+$rand
 #######################################################
 
 Write-Host "Please provide the following parameters for High avilability:"
@@ -151,14 +154,16 @@ $DisplayName = Read-Host "Specify DisplayName (For example: "AlteonHA")"
 $HomePage =  Read-Host "Specify HomePage (For example: "https://ha.radware.com/alteon")"
 $IdentifierUris = Read-Host "Specify Identifier URL (For example: "https://ha.radware.com/alteon")"
 $ClientSecret = Read-Host 'Specify Client Password' -AsSecureString
+Write-Host " ";
 
 
 $AzureSubscriptionName = Get-AzureRmSubscription -SubscriptionName $SubscriptionName 
 $AzureSubscriptionName| Select-AzureRmSubscription | out-null
 $AppReg = New-AzureRmADApplication -DisplayName $DisplayName -HomePage $HomePage -IdentifierUris  $IdentifierUris -Password $ClientSecret
 $ClientID = $AppReg.ApplicationId.Guid
-New-AzureRmADServicePrincipal -ApplicationId $ClientID 
+New-AzureRmADServicePrincipal -ApplicationId $ClientID | out-null
 Write-Output 'Waiting for ClientID registration'
+Write-Host " ";
 Start-Sleep -Seconds 40 | out-null
 New-AzureRmRoleAssignment -RoleDefinitionName Contributor -ServicePrincipalName $ClientID | out-null
 
@@ -175,6 +180,7 @@ Function RegisterRP {
     )
 
     Write-Host "Registering resource provider '$ResourceProviderNamespace'";
+    Write-Host " ";
     Register-AzureRmResourceProvider -ProviderNamespace $ResourceProviderNamespace > $null;
 }
 
@@ -190,12 +196,14 @@ $ErrorActionPreference = "Stop"
 
 # select subscription
 Write-Host "Selecting subscription '$SubscriptionName'";
+Write-Host " ";
 Select-AzureRmSubscription -SubscriptionID $SubscriptionName > $null;
 
 # Register RPs
 $resourceProviders = @("microsoft.compute","microsoft.network","microsoft.storage") > $null;
 if($resourceProviders.length) {
    # Write-Host "Registering resource providers"
+   Write-Host " ";
     foreach($resourceProvider in $resourceProviders) {
         RegisterRP($resourceProvider) > $null;
     }
@@ -207,24 +215,31 @@ if($resourceProviders.length) {
 $resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
 if(!$resourceGroup) {
     Write-Host "Resource group '$resourceGroupName' does not exist in location '$resourceGroupLocation'. Creating now resource group: $resourceGroupName" ;
+    Write-Host " ";
     if(!$resourceGroupLocation) {
         $resourceGroupLocation
     }
     Write-Host "Creating resource group '$resourceGroupName' in location '$resourceGroupLocation'";
-    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation 
+    Write-Host " ";
+    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation | out-null
 } else{
     Write-Host "Using existing resource group '$resourceGroupName'";
 }
 
 
 Write-Host "When the deployment will be completed, Your alteons will be avilable at:";
-Write-Host "";
-Write-Host "";
+Write-Host " ";
+Write-Host " ";
 Write-Host "https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host " ";
 Write-Host "https://$dnsNameForPublicIP2.$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host " ";
 
 # Start the deployment
 Write-Host "Starting deployment...";
+Write-Host " ";
+Write-Host " ";
+Write-Host " ";
 
 
 
@@ -244,27 +259,53 @@ $ParametersObj = @{
 
 
 
-New-AzureRmResourceGroupDeployment -TemplateUri $templateFilePath -TemplateParameterObject $ParametersObj -adminPassword $admpw -adminUsername $parameterFilePath.parameters.adminUsername.value  -ResourceGroupName $resourceGroupName -location $resourceGroupLocation -ClientSecret $ClientSecret
+New-AzureRmResourceGroupDeployment -TemplateUri $templateFilePath -TemplateParameterObject $ParametersObj -Name $resourceGroupName -adminPassword $admpw -adminUsername $parameterFilePath.parameters.adminUsername.value  -ResourceGroupName $resourceGroupName -location $resourceGroupLocation -ClientSecret $ClientSecret | out-null
 
 
 
-Write-Host "Your alteon's is accessible via:";
-Write-Host "";
-Write-Host "";
+Write-Host "Your alteon's will be accessible via:";
+Write-Host " ";
+Write-Host " ";
 Write-Host "https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host " ";
 Write-Host "https://$dnsNameForPublicIP2.$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host " ";
+Write-Host " ";
 
 
 
 
-Write-Host "If Internet explorer is installed on your station, It will open autmaticly and browse to your Alteon's:";
+Write-Host "When the Alteon will be accsible, it will open automaticly through your default browser";
+Write-Host "";
+Write-Host " ";
 
-Write-Host "Opening Internet Expolrer.....";
+
 Start-Sleep -Seconds 2 | out-null
 
-$OpenInBackgroundTab = 0x1000;
-$OpenIE=new-object -com internetexplorer.application
-$OpenIE.navigate2("https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/")
-$OpenIE.navigate2("https://$dnsNameForPublicIP2.$resourceGroupLocation.cloudapp.azure.com:8443/", $OpenInBackgroundTab)
-$OpenIE.visible=$true
+## Disable certificate validation
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$credential = New-Object System.Management.Automation.PSCredential( "admin", (ConvertTo-SecureString -String $adm -AsPlainText -Force) )
+$counter=0
+do {
+    $counter++
+    try{$response=Invoke-WebRequest "https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$parameterFilePath.parameters.VMPrefixName.value+"_1" } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response=@()}
+     try{$response2=Invoke-WebRequest "https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$parameterFilePath.parameters.VMPrefixName.value+"_2" } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response2=@()}
+    Start-Sleep -s 5
+} until ( $counter -le 360 -or $response.StatusCode -eq 200 -and $response2.StatusCode -eq 200)  
+
+If ($response.StatusCode -eq 200 -and $response2.StatusCode -eq 200 ) {
+Write-Host "Opening Browser.....";
+
+Start-Process "https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/"
+Start-Process "https://$dnsNameForPublicIP2.$resourceGroupLocation.cloudapp.azure.com:8443/"
+
+  }  Else {
+
+  "It's seems like the Alteon is inacssible, Please verify the deployment"
+  "If there is any issue with the script, Please open an issue on our GitHub page: https://github.com/Radware/Radware-azure-arm-templates/issues "
+
+} 
+
+
 
