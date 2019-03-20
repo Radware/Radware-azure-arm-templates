@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": null
+        },
+        "VMPrefixName": {
+            "value": "AlteonPrefix"
+        },
+        "adminUsername": {
+            "value": "radwareazure"
+        },
+        "adminPassword": {
+            "value": "IloveAlteonAzure!"
+        },
+        "storageAccountName": {
+            "value": "alteonstorage2644"
+        },
+        "vmSize": {
+            "value": "Standard_D2"
+        },
+        "vmCount": {
+            "value": "2"
+        },
+        "dnsNameForPublicIP1": {
+            "value": "alteon1"
+        },
+        "dnsNameForPublicIP2": {
+            "value": "alteon2"
+        },
+        "ClientID": {
+            "value": "clientid"
+        },
+        "ClientSecret": {
+            "value": null
+        },
+        "TenantID": {
+            "value": "tenatnid"
+        },
+        "DNSServerIP": {
+            "value": "8.8.8.8"
+        }
+    }
+}
