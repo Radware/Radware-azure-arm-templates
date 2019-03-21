@@ -257,9 +257,9 @@ New-AzureRmResourceGroupDeployment -TemplateUri $templateFilePath -TemplateParam
 Write-Host "Your alteon's will be accessible via:";
 Write-Host " ";
 Write-Host " ";
-Write-Host "https://"$ParametersObj.dnsNameForPublicIP1".$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host "https://$dns1.$resourceGroupLocation.cloudapp.azure.com:8443/";
 Write-Host " ";
-Write-Host "https://"$ParametersObj.dnsNameForPublicIP2".$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host "https://$dns2.$resourceGroupLocation.cloudapp.azure.com:8443/";
 Write-Host " ";
 Write-Host " ";
 
@@ -280,16 +280,16 @@ $credential = New-Object System.Management.Automation.PSCredential( "admin", (Co
 $counter=0
 do {
     $counter++
-    try{$response=Invoke-WebRequest "https://"$ParametersObj.dnsNameForPublicIP1".$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$parameterFilePath.parameters.VMPrefixName.value+"_1" } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response=@()}
-     try{$response2=Invoke-WebRequest "https://"$ParametersObj.dnsNameForPublicIP2".$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$parameterFilePath.parameters.VMPrefixName.value+"_2" } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response2=@()}
+    try{$response=Invoke-WebRequest "https://$dns1.$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$parameterFilePath.parameters.VMPrefixName.value+"_1" } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response=@()}
+     try{$response2=Invoke-WebRequest "https://$dns2.$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$parameterFilePath.parameters.VMPrefixName.value+"_2" } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response2=@()}
     Start-Sleep -s 5
 } until ( $counter -le 360 -or $response.StatusCode -eq 200 -and $response2.StatusCode -eq 200)  
 
 If ($response.StatusCode -eq 200 -and $response2.StatusCode -eq 200 ) {
 Write-Host "Opening Browser.....";
 
-Start-Process "https://"$ParametersObj.dnsNameForPublicIP1".$resourceGroupLocation.cloudapp.azure.com:8443/"
-Start-Process "https://"$ParametersObj.dnsNameForPublicIP2".$resourceGroupLocation.cloudapp.azure.com:8443/"
+Start-Process "https://$dns1.$resourceGroupLocation.cloudapp.azure.com:8443/"
+Start-Process "https://$dns2.$resourceGroupLocation.cloudapp.azure.com:8443/"
 
   }  Else {
 
