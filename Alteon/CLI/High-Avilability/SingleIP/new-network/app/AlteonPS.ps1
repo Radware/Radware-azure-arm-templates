@@ -118,23 +118,6 @@ Write-Host "The selected location was: $resourceGroupLocation"
 
 
 
-
-##########################
-
-
-
-###DNS Name for public IP 1###
-$dnsNameForPublicIP1 = $(
- $dnsNameForPublicIP1selection = read-host "Specify DNS name for PublicIP1  <"$parameterFilePath.parameters.dnsNameForPublicIP1.value" is default>"
- if ($dnsNameForPublicIP1selection) {$dnsNameForPublicIP1selection} else {$parameterFilePath.parameters.dnsNameForPublicIP1.value}
-)
-##########################
-
-###DNS Name for public IP 2###
-$dnsNameForPublicIP2 = $(
- $dnsNameForPublicIP2selection = read-host "Specify DNS name for PublicIP2  <"$parameterFilePath.parameters.dnsNameForPublicIP2.value" is default>"
- if ($dnsNameForPublicIP2selection) {$dnsNameForPublicIP2selection} else {$parameterFilePath.parameters.dnsNameForPublicIP2.value}
-)
 ##########################
 ###DNSServerIP###
 $DNSServerIP = $(
@@ -248,8 +231,8 @@ $ParametersObj = @{
     storageAccountName = $stgaccname
     ClientID = "$ClientID"
     TenantID = $AzureSubscriptionName.TenantID
-    dnsNameForPublicIP1 = "$dnsNameForPublicIP1"
-    dnsNameForPublicIP2 = "$dnsNameForPublicIP2"
+    dnsNameForPublicIP1 = $vmname.ToLower() +"01"
+    dnsNameForPublicIP2 = $vmname.ToLower() +"02"
     DNSServerIP = "$DNSServerIP"  
     vmCount = $parameterFilePath.parameters.vmCount.value
     VMPrefixName =  "$vmname"
@@ -297,8 +280,8 @@ do {
 If ($response.StatusCode -eq 200 -and $response2.StatusCode -eq 200 ) {
 Write-Host "Opening Browser.....";
 
-Start-Process "https://$dnsNameForPublicIP1.$resourceGroupLocation.cloudapp.azure.com:8443/"
-Start-Process "https://$dnsNameForPublicIP2.$resourceGroupLocation.cloudapp.azure.com:8443/"
+Start-Process "https://"$ParametersObj.dnsNameForPublicIP1".$resourceGroupLocation.cloudapp.azure.com:8443/"
+Start-Process "https://"$ParametersObj.dnsNameForPublicIP2".$resourceGroupLocation.cloudapp.azure.com:8443/"
 
   }  Else {
 
