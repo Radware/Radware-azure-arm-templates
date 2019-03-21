@@ -241,6 +241,10 @@ $ParametersObj = @{
     vmCount = $parameterFilePath.parameters.vmCount.value
     VMPrefixName =  "$vmname"
     vmSize =  $parameterFilePath.parameters.vmSize.value
+    slbPortNumber = $parameterFilePath.parameters.slbPortNumber.value
+    slbMetric = $parameterFilePath.parameters.slbMetric.value
+    realsCount = $parameterFilePath.parameters.realsCount.value
+    
 }
 
 
