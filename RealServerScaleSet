@@ -2,24 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vmSku": {
-            "type": "string",
-            "defaultValue": "Standard_A1",
-            "metadata": {
-                "description": "Size of VMs in the VM Scale Set."
-            }
-        },
-        "ubuntuOSVersion": {
-            "type": "string",
-            "defaultValue": "16.04-LTS",
-            "allowedValues": [
-                "14.04.4-LTS",
-                "16.04-LTS"
-            ],
-            "metadata": {
-                "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values are: 15.10, 14.04.4-LTS."
-            }
-        },
         "vmssName": {
             "type": "string",
             "metadata": {
@@ -29,6 +11,7 @@
         },
         "instanceCount": {
             "type": "int",
+            "defaultValue": "2",
             "metadata": {
                 "description": "Number of VM instances (100 or less)."
             },
@@ -36,7 +19,9 @@
         }
     },
     "variables": {
+        "vmSku": "Standard_A1",
         "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
+        "ubuntuOSVersion": "16.04-LTS",
         "adminUsername": "azureadmin",
         "adminPassword": "Radware123!@",
         "longNamingInfix": "[toLower(concat(parameters('vmssName'),uniqueString(resourceGroup().id)))]",
@@ -59,7 +44,7 @@
         "osType": {
             "publisher": "Canonical",
             "offer": "UbuntuServer",
-            "sku": "[parameters('ubuntuOSVersion')]",
+            "sku": "[variables('ubuntuOSVersion')]",
             "version": "latest"
         },
         "imageReference": "[variables('osType')]",
@@ -153,7 +138,7 @@
                 "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
             ],
             "sku": {
-                "name": "[parameters('vmSku')]",
+                "name": "[variables('vmSku')]",
                 "tier": "Standard",
                 "capacity": "[parameters('instanceCount')]"
             },
