@@ -11,7 +11,7 @@
         },
         "instanceCount": {
             "type": "int",
-            "defaultValue": "2",
+            "defaultValue": 2,
             "metadata": {
                 "description": "Number of VM instances (100 or less)."
             },
@@ -52,7 +52,7 @@
         "networkApiVersion": "2017-04-01",
         "storageApiVersion": "2015-06-15",
         "insightsApiVersion": "2015-04-01",
-        "customData": "[concat('#!/bin/bash\n','apt-get update -y && apt-get install apache2 php libapache2-mod-php php-fpm -y\n','a2enconf php7.2-fpm\n','git clone https://github.com/valentinegu/BasicTestApp.git\n','rm -rf /etc/apache2/sites-enabled/*\n','rm -rf /etc/apache2/sites-available/*\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-enabled/\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-available/\n','cp BasicTestApp/html/* /var/www/html/\n','chmod +x /var/www/html/extload.sh\n','service apache2 restart\n')]"
+        "customData": "[concat('#!/bin/bash\n','apt-get update -y && apt-get install apache2 php libapache2-mod-php php-fpm -y\n','a2enconf php7.2-fpm\n','git clone https://github.com/valentinegu/BasicTestApp.git\n','rm -rf /etc/apache2/sites-enabled/*\n','rm -rf /etc/apache2/sites-available/*\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-enabled/\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-available/\n','cp BasicTestApp/html/* /var/www/html/\n','chmod +x /var/www/html/extload.sh\n','sed -i \'s/max_execution_time.*/max_execution_time = 600/g\' /etc/php/7.0/apache2/php.ini\n','service apache2 restart\n')]"
     },
     "resources": [
         {
