@@ -15,11 +15,11 @@
             "metadata": {
                 "description": "Number of VM instances (100 or less)."
             },
-            "maxValue": 100
+            "maxValue": 10
         }
     },
     "variables": {
-        "vmSku": "Standard_A1",
+        "vmSku": "Standard_B1ls",
         "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
         "ubuntuOSVersion": "16.04-LTS",
         "adminUsername": "azureadmin",
@@ -52,7 +52,7 @@
         "networkApiVersion": "2017-04-01",
         "storageApiVersion": "2015-06-15",
         "insightsApiVersion": "2015-04-01",
-        "customData": "[concat('#!/bin/bash\n','apt-get update -y && apt-get install apache2 php libapache2-mod-php php-fpm -y\n','a2enconf php7.2-fpm\n','git clone https://github.com/valentinegu/BasicTestApp.git\n','rm -rf /etc/apache2/sites-enabled/*\n','rm -rf /etc/apache2/sites-available/*\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-enabled/\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-available/\n','cp BasicTestApp/html/* /var/www/html/\n','chmod +x /var/www/html/extload.sh\n','sed -i \'s/max_execution_time.*/max_execution_time = 600/g\' /etc/php/7.0/apache2/php.ini\n','service apache2 restart\n')]"
+        "customData": "[concat('#!/bin/bash\n','apt-get update -y && apt-get install apache2 php libapache2-mod-php php-fpm -y\n','a2enconf php7.2-fpm\n','git clone https://github.com/valentinegu/BasicTestApp.git\n','rm -rf /etc/apache2/sites-enabled/*\n','rm -rf /etc/apache2/sites-available/*\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-enabled/\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-available/\n','cp BasicTestApp/html/* /var/www/html/\n','chmod +x /var/www/html/extload.sh\n','service apache2 restart\n')]"
     },
     "resources": [
         {
@@ -221,11 +221,11 @@
                                     "metricNamespace": "",
                                     "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('namingInfix'))]",
                                     "timeGrain": "PT1M",
-                                    "statistic": "Average",
+                                    "statistic": "Maximum",
                                     "timeWindow": "PT5M",
-                                    "timeAggregation": "Average",
+                                    "timeAggregation": "Maximum",
                                     "operator": "GreaterThan",
-                                    "threshold": 60
+                                    "threshold": 90
                                 },
                                 "scaleAction": {
                                     "direction": "Increase",
@@ -241,7 +241,7 @@
                                     "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('namingInfix'))]",
                                     "timeGrain": "PT1M",
                                     "statistic": "Average",
-                                    "timeWindow": "PT5M",
+                                    "timeWindow": "PT1M",
                                     "timeAggregation": "Average",
                                     "operator": "LessThan",
                                     "threshold": 30
