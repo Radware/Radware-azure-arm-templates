@@ -15,11 +15,11 @@
             "metadata": {
                 "description": "Number of VM instances (100 or less)."
             },
-            "maxValue": 10
+            "maxValue": 100
         }
     },
     "variables": {
-        "vmSku": "Standard_B1ls",
+        "vmSku": "Standard_A1",
         "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
         "ubuntuOSVersion": "16.04-LTS",
         "adminUsername": "azureadmin",
@@ -52,7 +52,7 @@
         "networkApiVersion": "2017-04-01",
         "storageApiVersion": "2015-06-15",
         "insightsApiVersion": "2015-04-01",
-        "customData": "[concat('#!/bin/bash\n','apt-get update -y && apt-get install apache2 php libapache2-mod-php php-fpm -y\n','a2enconf php7.2-fpm\n','git clone https://github.com/valentinegu/BasicTestApp.git\n','rm -rf /etc/apache2/sites-enabled/*\n','rm -rf /etc/apache2/sites-available/*\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-enabled/\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-available/\n','cp BasicTestApp/html/* /var/www/html/\n','chmod +x /var/www/html/extload.sh\n','service apache2 restart\n')]"
+        "customData": "[concat('#!/bin/bash\n','apt-get update -y && apt-get install apache2 php libapache2-mod-php php-fpm -y\n','a2enconf php*-fpm\n','git clone https://github.com/valentinegu/BasicTestApp.git\n','rm -rf /etc/apache2/sites-enabled/*\n','rm -rf /etc/apache2/sites-available/*\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-enabled/\n','cp BasicTestApp/apache-conf/* /etc/apache2/sites-available/\n','cp BasicTestApp/html/* /var/www/html/\n','chmod +x /var/www/html/extload.sh\n', 'sed -i \"s/max_execution_time.*/max_execution_time = 600/g\" /etc/php/7.0/apache2/php.ini\n','service apache2 restart\n')]"
     },
     "resources": [
         {
@@ -221,17 +221,17 @@
                                     "metricNamespace": "",
                                     "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('namingInfix'))]",
                                     "timeGrain": "PT1M",
-                                    "statistic": "Maximum",
+                                    "statistic": "Average",
                                     "timeWindow": "PT5M",
                                     "timeAggregation": "Maximum",
                                     "operator": "GreaterThan",
-                                    "threshold": 90
+                                    "threshold": 30
                                 },
                                 "scaleAction": {
                                     "direction": "Increase",
                                     "type": "ChangeCount",
                                     "value": "1",
-                                    "cooldown": "PT1M"
+                                    "cooldown": "PT2M"
                                 }
                             },
                             {
@@ -241,16 +241,16 @@
                                     "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('namingInfix'))]",
                                     "timeGrain": "PT1M",
                                     "statistic": "Average",
-                                    "timeWindow": "PT1M",
+                                    "timeWindow": "PT5M",
                                     "timeAggregation": "Average",
                                     "operator": "LessThan",
-                                    "threshold": 30
+                                    "threshold": 15
                                 },
                                 "scaleAction": {
                                     "direction": "Decrease",
                                     "type": "ChangeCount",
                                     "value": "1",
-                                    "cooldown": "PT5M"
+                                    "cooldown": "PT2M"
                                 }
                             }
                         ]
