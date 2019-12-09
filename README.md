@@ -20,7 +20,7 @@ The following list contains Radware deployment in Azure
 
   **Alteon - Single IP**
     - [New-network](https://github.com/Radware/Radware-azure-arm-templates/tree/master/Alteon/GUI/Standalone/SingleIP/new-network)
-       <br><a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FStandalone%2FSingleIP%2Fnew-network%2Fdeploy.template.json">  <img src="http://azuredeploy.net/deploybutton.png"/></a><br>
+       <br><br>Azure portal deployment:<br><a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FStandalone%2FSingleIP%2Fnew-network%2Fdeploy.template.json">  <img src="http://azuredeploy.net/deploybutton.png"/></a><br>
 
 
 ### Copyright
