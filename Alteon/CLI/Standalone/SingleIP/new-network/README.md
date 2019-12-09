@@ -7,4 +7,4 @@
 
 | Configuration | vCPU |  GB RAM  |
 | --- | --- | --- |
-| Alteon VA (without IP reputation) | 1 | 2 (for L4 SLB) <br> 3 (for L7 SLB) |
+| Alteon VA (without IP reputation) | 1 | 2 (for L4 SLB) <br> 3 (for L7 SLB) | 7 |
