@@ -1,4 +1,4 @@
-## Netwrok type
+## Network type
 For each of the standalone templates, you must choose the type of network stack. 
 
 
