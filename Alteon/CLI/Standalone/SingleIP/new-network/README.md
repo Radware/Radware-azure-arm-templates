@@ -6,3 +6,8 @@
 • When configuring more than one
 vCPU, one is allocated for the  MP and
 the rest for the SPs. |
+
+
+| Parameter | Required | Description |
+| --- | --- | --- |
+| adminUsername | Yes | User name for the Virtual Machine. |
