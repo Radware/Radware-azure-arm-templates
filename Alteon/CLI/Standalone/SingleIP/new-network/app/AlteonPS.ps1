@@ -159,7 +159,8 @@ $ErrorActionPreference = "Stop"
 
 
 # select subscription
-Write-Host "Selecting subscription '$SubscriptionName.Name'";
+$subname = $SubscriptionName.Name
+Write-Host "Selecting subscription '$subname'";
 Select-AzureRmSubscription -SubscriptionID $SubscriptionName > $null;
 
 # Register RPs
