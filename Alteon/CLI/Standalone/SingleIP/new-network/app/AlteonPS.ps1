@@ -20,10 +20,10 @@ $templateFilePath = "https://raw.githubusercontent.com/Radware/Radware-azure-arm
 Write-Host "Welcome to radware Alteon Deployment"
 
 $SubIdCount =  Get-AzureRmSubscription | Measure-Object -Line
-$Subid = Get-AzureRmSubscription
+$SubscriptionName = Get-AzureRmSubscription
  If ($SubIdCount.lines  -eq '1')  {
 
-  $Subid = Get-AzureRmSubscription
+  $SubscriptionName = Get-AzureRmSubscription
 
   } Else {
 
@@ -159,7 +159,7 @@ $ErrorActionPreference = "Stop"
 
 
 # select subscription
-Write-Host "Selecting subscription '$SubscriptionName'";
+Write-Host "Selecting subscription '$SubscriptionName.Name'";
 Select-AzureRmSubscription -SubscriptionID $SubscriptionName > $null;
 
 # Register RPs
