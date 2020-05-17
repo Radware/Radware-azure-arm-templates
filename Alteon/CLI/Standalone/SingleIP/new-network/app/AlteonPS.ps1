@@ -243,6 +243,7 @@ $ParametersObj = @{
     virtualMachineSize =  $parameterFilePath.parameters.virtualMachineSize.value
     diagnosticsStorageAccountKind = $parameterFilePath.parameters.diagnosticsStorageAccountKind.value
     diagnosticsStorageAccountType = $parameterFilePath.parameters.diagnosticsStorageAccountType.value
+    version = $parameterFilePath.parameters.version.value
 }
 
 
