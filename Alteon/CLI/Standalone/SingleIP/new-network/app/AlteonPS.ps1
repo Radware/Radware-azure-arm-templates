@@ -255,6 +255,7 @@ $ParametersObj = @{
 New-AzureRmResourceGroupDeployment -TemplateUri $templateFilePath -TemplateParameterObject $ParametersObj -adminPassword $parameterFilePath.parameters.adminPassword.value  -ResourceGroupName $resourceGroupName -location $resourceGroupLocation;
 
 #########################Alteon Access##################################
+$adm = "admin"
 $dns = $vmname.ToLower()
 Write-Host "Your Alteon will be accessible via:";
 Write-Host " ";
@@ -276,7 +277,7 @@ $credential = New-Object System.Management.Automation.PSCredential( "admin", (Co
 $counter=0
 do {
     $counter++
-    try{$response=Invoke-WebRequest "https://$dns.$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$parameterFilePath.parameters.VMPrefixName.value } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response=@()}
+    try{$response=Invoke-WebRequest "https://$dns.$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$vmname } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response=@()}
     Start-Sleep -s 5
 } until ( $counter -le 360 -or $response.StatusCode -eq 200)  
 
