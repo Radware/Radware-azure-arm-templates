@@ -275,7 +275,7 @@ $publicIp.DnsSettings = @{"DomainNameLabel" = $dns}
 $publicIp.DnsSettings.DomainNameLabel = $dns
 Set-AzureRmPublicIpAddress -PublicIpAddress $publicIp
 
-
+Start-Sleep -Seconds 30 | out-null
 
 
 ## Disable certificate validation
