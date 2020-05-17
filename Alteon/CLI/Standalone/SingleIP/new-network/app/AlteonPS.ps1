@@ -268,7 +268,15 @@ Write-Host "";
 Write-Host " ";
 
 
-Start-Sleep -Seconds 2 | out-null
+Start-Sleep -Seconds 60 | out-null
+
+$publicIp = Get-AzureRmPublicIpAddress -name alteonpublic-ip -ResourceGroupName $resourceGroupName
+$publicIp.DnsSettings = @{"DomainNameLabel" = $dns}
+$publicIp.DnsSettings.DomainNameLabel = $dns
+Set-AzureRmPublicIpAddress -PublicIpAddress $publicIp
+
+
+
 
 ## Disable certificate validation
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
