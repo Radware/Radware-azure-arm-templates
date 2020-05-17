@@ -8,6 +8,9 @@
         "networkInterfaceName": {
             "type": "string"
         },
+         "version": {
+            "type": "string"
+        },
         "networkSecurityGroupName": {
             "type": "string"
         },
