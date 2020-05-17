@@ -161,9 +161,10 @@ $ErrorActionPreference = "Stop"
 
 
 # select subscription
-$subname = $SubscriptionName.Name
-Write-Host "Selecting subscription '$subname'";
-Select-AzureRmSubscription -SubscriptionID $SubscriptionName > $null;
+Write-Host "Selecting subscription '$SubscriptionName'";
+$subid = Get-AzureRmSubscription -SubscriptionName 'Professional Services'
+$subid.Id
+Select-AzureRmSubscription -SubscriptionID $subid.Id > $null;
 
 # Register RPs
 $resourceProviders = @("microsoft.compute","microsoft.network","microsoft.storage") > $null;
