@@ -30,7 +30,7 @@ $SubscriptionName = Get-AzureRmSubscription
   } Else {
 
     $linenumber = 1
-$Subid |
+$SubscriptionName |
    ForEach-Object {New-Object psObject -Property @{'Number'=$linenumber;'Subscription Name'= $_.name;};$linenumber ++ } -outvariable choosemenu | out-null
     
 function Show-Menu
