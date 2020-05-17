@@ -252,3 +252,41 @@ $ParametersObj = @{
 
 
 New-AzureRmResourceGroupDeployment -TemplateUri $templateFilePath -TemplateParameterObject $ParametersObj -adminPassword $parameterFilePath.parameters.adminPassword.value  -ResourceGroupName $resourceGroupName -location $resourceGroupLocation;
+
+#########################Alteon Access##################################
+$dns = $vmname.ToLower()
+Write-Host "Your Alteon will be accessible via:";
+Write-Host " ";
+Write-Host " ";
+Write-Host "https://$dns.$resourceGroupLocation.cloudapp.azure.com:8443/";
+Write-Host " ";
+
+Write-Host "When the Alteon will be accsible, it will open automaticly through your default browser";
+Write-Host "";
+Write-Host " ";
+
+
+Start-Sleep -Seconds 2 | out-null
+
+## Disable certificate validation
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$credential = New-Object System.Management.Automation.PSCredential( "admin", (ConvertTo-SecureString -String $adm -AsPlainText -Force) )
+$counter=0
+do {
+    $counter++
+    try{$response=Invoke-WebRequest "https://$dns.$resourceGroupLocation.cloudapp.azure.com:8443/config" -Method PUT -Body ( ( @{ sysName=$parameterFilePath.parameters.VMPrefixName.value+"_1" } ) | ConvertTo-Json ) -Credential $credential -UseBasicParsing} catch{$response=@()}
+    Start-Sleep -s 5
+} until ( $counter -le 360 -or $response.StatusCode -eq 200)  
+
+If ($response.StatusCode -eq 200  ) {
+Write-Host "Opening Browser.....";
+
+Start-Process "https://$dns.$resourceGroupLocation.cloudapp.azure.com:8443/"
+
+  }  Else {
+
+  "It's seems like the Alteon is inacssible, Please verify the deployment"
+  "If there is any issue with the script, Please open an issue on our GitHub page: https://github.com/Radware/Radware-azure-arm-templates/issues "
+
+} 
