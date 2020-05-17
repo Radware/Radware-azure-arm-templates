@@ -5,6 +5,9 @@
         "location": {
             "value": "centralus"
         },
+         "version": {
+            "value": "32.6.00000440"
+        },
         "networkInterfaceName": {
             "value": "alteonnic01"
         },
