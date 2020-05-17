@@ -1,9 +1,10 @@
+#Allow TLS1.2
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 
 # Set the Execution policy for "RemoteSigned" in order to launch the script
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
 # Install Azure resource manager cmdlet
 Install-Module -Name AzureRM -AllowClobber
-#Allow TLS1.2
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 
+
 
 try {
     Get-AzureRmSubscription | Out-Null
