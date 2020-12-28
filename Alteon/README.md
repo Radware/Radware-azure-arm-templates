@@ -1,13 +1,19 @@
 ## Alteon Solutions
-The following page describes Radware Alteon dyploymens.
+The following page describes Alteon deployments types.
 
-  - **Standalone** <br>These templates deploy a Standalone Alteon VE.
-      This can be use for Dev/QA enviroment or for upgrade for HA pair.
-      Config-Sync and high avilability shoudl be configured manualy (Through Alteon GUI/CLI).
+  - **GUI** <br>These templates deploy a Standalone/High Availability Alteon VE.
+      This method simplified and leverage deployment speed by deploying an Alteon in a few steps.
+ 
+ - **CLI** <br>These templates deploy a Standalone/High Availability Alteon VE.
+      This method is for fast deployment using Powershell/AzureCLI.
+      The ARM templates can be engaged in large scale deployment and automation process.
       
-      Supported configurations:
+ - **Solutions** <br>These templates deploy a full solutions of Alteon.
+      This method provides fast best practices solutions with the Alteon product line.
+      Those solutions can be used either GUI/CLI.   
+      
+      
+      
 
-    * SingleIP 
-      * Using 1 IP for Managment and Data traffic.
-      * Allow easyer deployments and automations.
+     
     
