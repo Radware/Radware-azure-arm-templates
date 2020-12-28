@@ -14,19 +14,11 @@ Master-(product name)-(deployment method (CLI/GUI))-(solution name)
    The CLI directory contains ARM templates for automation and large scale deployment.
    Thest templates are subject to change and not covered by Radware support.
 
-## List of Radware ARM templates for Azure deployments
+## Radware Azure portfolio
 
-The following list contains Radware deployment in Azure
 
-**Alteon**<br>
+Please click <a href= "https://www.radware.com/resources/microsoft-azure/">  <img src= https://www.radware.com/RadwareNext/images/logo.svg"/></a><br> to learn more about our Azure solutions.
 
-  **Alteon SA - Single IP**
-    - [New-network](https://github.com/Radware/Radware-azure-arm-templates/tree/master/Alteon/GUI/Standalone/SingleIP/new-network)
-       <br><br>Azure portal deployment:<br><a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FStandalone%2FSingleIP%2Fnew-network%2Fdeploy.template.json">  <img src="https://aka.ms/deploytoazurebutton"/></a><br>
-       
-  **Alteon High Avilability - Single IP**
-    - [New-network](https://github.com/Radware/Radware-azure-arm-templates/tree/master/Alteon/GUI/High%20Avilability/SingleIP/new-network)
-       <br><br>Azure portal deployment:<br><a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FHigh%20Avilability%2FSingleIP%2Fnew-network%2Fdeploy.template.json">  <img src="https://aka.ms/deploytoazurebutton"/></a><br>       
 
 ### Known Issues
 All known issues are on GitHub at https://github.com/Radware/Radware-azure-arm-templates/issues.
@@ -34,7 +26,7 @@ All known issues are on GitHub at https://github.com/Radware/Radware-azure-arm-t
 
 ### Copyright
 
-Copyright 2019 Radware – All Rights Reserved
+Copyright 2020 Radware – All Rights Reserved
 
 ### License
 
