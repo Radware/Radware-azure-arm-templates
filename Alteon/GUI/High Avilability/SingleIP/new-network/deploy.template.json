@@ -4,7 +4,7 @@
     "parameters": {
         "location": {
             "type": "string",
-            "defaultValue": "[resourceGroup().location]",
+            "defaultValue": "northeurope",
             "metadata": {
                 "description": "Location for all resources."
             }
@@ -17,6 +17,7 @@
         },
         "VMPrefixName": {
             "type": "string",
+            "defaultValue": "Alteon",
             "metadata": {
                 "description": "VM Prefix Name"
             }
@@ -34,7 +35,7 @@
             }
         },
         "vmCount": {
-            "defaultValue": "1",
+            "defaultValue": "2",
             "type": "string",
             "metadata": {
                 "description": "VM count"
@@ -83,7 +84,7 @@
             }
         },
         "DNSServerIP": {
-            "defaultValue": "none",
+            "defaultValue": "8.8.8.8",
             "type": "string",
             "metadata": {
                 "description": "DNS Server IP"
