@@ -1,6 +1,7 @@
-## Alteon Solutions
 [![Issues](https://img.shields.io/github/issues/Radware/Radware-azure-arm-templates)](https://github.com/radware/Radware-azure-arm-templates/issues)
 [![Commit](https://img.shields.io/github/last-commit/Radware/Radware-azure-arm-templates)]()
+## Alteon Solutions
+
 The following page describes Alteon deployments types.
 
   - **GUI** <br>These templates deploy a Standalone/High Availability Alteon VE.
