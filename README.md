@@ -17,7 +17,7 @@ Master-(product name)-(deployment method (CLI/GUI))-(solution name)
 ## Radware Azure portfolio
 
 
-Please click <a href="https://www.radware.com/resources/microsoft-azure">  <img src="https://www.radware.com/RadwareNext/images/logo.svg"/> width="151.4" height="54.4" </a> to learn more about our Azure solutions.
+Please click <a href="https://www.radware.com/resources/microsoft-azure">  <img src="https://www.radware.com/RadwareNext/images/logo.svg"/  width="151.4" height="54.4"> </a> to learn more about our Azure solutions.
 
 
 ### Known Issues
