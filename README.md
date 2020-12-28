@@ -23,7 +23,10 @@ Please visit our website to learn more about our Azure solutions. <br> <br>  htt
 ### Known Issues
 All known issues are on GitHub at https://github.com/Radware/Radware-azure-arm-templates/issues.
 
+## Template information
 
+Descriptions for each template are contained at the top of each template in the README file.
+Please read the README file before deployment.
 ### Copyright
 
 Copyright 2020 Radware – All Rights Reserved
