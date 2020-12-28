@@ -1,5 +1,7 @@
 # Radware Azure ARM templates
 
+[![Issues](https://img.shields.io/github/issues/radware/Radware-azure-arm-templates)](https://github.com/radware/Radware-azure-arm-templates/issues)
+
 ## Introduction
 Welcome to Radware GitHub for Azure ARM templates.
 In the repository, please follow on bracnhes template:
