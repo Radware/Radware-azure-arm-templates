@@ -17,7 +17,7 @@ Master-(product name)-(deployment method (CLI/GUI))-(solution name)
 ## Radware Azure portfolio
 
 
-Please visit our website to learn more about our Azure solutions. <br>  https://www.radware.com/resources/microsoft-azure 
+Please visit our website to learn more about our Azure solutions. <br> <br>  https://www.radware.com/resources/microsoft-azure 
 
 
 ### Known Issues
