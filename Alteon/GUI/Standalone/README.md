@@ -1,7 +1,7 @@
+## Single/Multi IP
+
 [![Issues](https://img.shields.io/github/issues/Radware/Radware-azure-arm-templates)](https://github.com/radware/Radware-azure-arm-templates/issues)
 [![Commit](https://img.shields.io/github/last-commit/Radware/Radware-azure-arm-templates)]()
-
-## Single/Multi IP
 
 In many of our templates, You can choose between single IP vs. Multi IP.
 Alteon VA running on the Azure Cloud runs by default in single IP address mode.<br> This is
