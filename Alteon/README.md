@@ -1,6 +1,6 @@
 [![Issues](https://img.shields.io/github/issues/Radware/Radware-azure-arm-templates)](https://github.com/radware/Radware-azure-arm-templates/issues)
 [![Commit](https://img.shields.io/github/last-commit/Radware/Radware-azure-arm-templates)]()
-# Alteon Solutions
+# Alteon templates types
 
 The following page describes Alteon deployments types.
 
