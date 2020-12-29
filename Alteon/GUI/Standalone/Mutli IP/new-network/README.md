@@ -1,4 +1,4 @@
-# Deploying the Alteon VA in Azure - Single IP
+# Deploying the Alteon VA in Azure - Multi IP
 
 [![Issues](https://img.shields.io/github/issues/Radware/Radware-azure-arm-templates)](https://github.com/radware/Radware-azure-arm-templates/issues)
 [![Commit](https://img.shields.io/github/last-commit/Radware/Radware-azure-arm-templates)]()
@@ -13,7 +13,7 @@
 
 ## Introduction
 
-This solution uses an ARM template to launch a single NIC deployment of a cloud-focused Alteon VA in Microsoft Azure. Traffic flows from the Alteon VA to the application servers. This is the standard Cloud design where the  Alteon VA instance is running with a single interface, where both management and data plane traffic is processed.  This is a traditional model in the cloud where the deployment is considered one-armed.
+This solution uses an ARM template to launch a multi NIC deployment of a cloud-focused Alteon VA in Microsoft Azure. Traffic flows from the Alteon VA to the application servers. This is the standard Cloud design where the  Alteon VA instance is running with a single interface, where both management and data plane traffic is processed.  This is a traditional model in the cloud where the deployment is considered one-armed.
 
 Alteon VA for Microsoft Azure cloud allows running your enterprise applications while tapping into
 Microsoft Azure computing resources and providing a common application delivery platform for your
@@ -38,6 +38,19 @@ For information on getting started using Alteon on Azure, see [Alteon in Azure](
 
 ## Configuration Notes
 
+Post deployment, Please perfrorm the following procedure to switch to Multi IP:
+
+1. Shut down the VM running the Alteon VA.
+2. Through the Azure dashboard, attach additional network interfaces as required to the Alteon VA.
+3. Reboot the VM.
+4. Configure the Alteon VA to run in a multiple IP address mode. This is done by disabling the
+single IP address mode using the CLI command /c/sys/singleip dis. After pressing Enter
+you will be prompted to reboot the Alteon VA.
+When the Alteon VA is not configured to work in a Single IP address mode but just a single network
+interface is attached to the VM running the Alteon VA, on every login to the system you will receive
+a notification message in the Web UI and will be prompted on the CLI to switch to Single IP address
+mode.
+
 ### Web Interface
 
 Alteon VA, when running on Microsoft Azure, is configured to have its management controlled
@@ -50,10 +63,7 @@ with port 8443.
 For example, if the Alteon VM IP address is 1.1.1.1, enter https://1.1.1.1:8443
 To log in, enter the default username and password: admin, admin
 
-Note: If you do not intend to load balance HTTPS traffic, you can change the HTTPS port for
-management purposes to the standard HTTPS port 443 through the Web interface at:
->Configuration>System>Management Access>Management Protocols
-or through the CLI command: /c/sys/access/https/port.
+
 
 ### CLI Interface
 
