@@ -1,29 +1,7 @@
-# Alteon powershell deployment
+## Single/Multi IP
 
-## Table Of Contents ###
-- [Description](#description )
-- [How To Use](#how-to-use )
-  * [Required modules](#Required-modules)
-  * [Using Launch file](#Using-Launch-file)
-- [Currently Supported](#currently-supported)
-- [Planed In The Future](#planed-in-the-future)
+In many our templates, You can choose between single IP vs Multi IP.
+Alteon VA running on the Azure Cloud runs by default in single IP address mode.<br> This is
+very useful when using Alteon to manage a single service.
 
-## Description ##
-The following script is used to deploy alteon VM on azure with Microsoft Powershell script.<br>
-The script was tested on both windows Powershell client and Azure shell.<br>
-Supported deployment: Single IP.<br>
-
-
-## How To Use ##
-### Required modules ###
-In order to use the script make sure you have installed AzureRM cmdlet, and ExuctionPolicy set to "Unrestricted".
-
-
-### Using Launch file ###
-Just run the launch file ("Launch.ps1") and the script will be loaded "Launch.ps1",<br>
-This file will pull dynamicly the neceasry files for deployment.
-
-## Planed In The Future ##
-* Multiple IP.
-* HA Deployment.
-* Autoscale Deployment.
+  - **Single IP** <br>
