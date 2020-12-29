@@ -71,4 +71,30 @@ Refer to the Alteon VA Installation Guide for details of the Alteon VA cloud-ini
 
 ## Deployment
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FStandalone%2FSingleIP%2Fnew-network%2Fdeploy.template.json">  <img src="https://aka.ms/deploytoazurebutton"/></a><br>
+### Azure deploy buttons
+
+Use the appropriate button below to deploy:
+
+[![Deploy to Azure](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FStandalone%2FSingleIP%2Fnew-network%2Fdeploy.template.json)
+
+### Template Parameters
+
+
+| Parameter | Required | Description |
+| --- | --- | --- |
+| adminUsername | Yes | User name for Maint mode. |
+| adminPassword| Yes | Password for Maint mode. |
+| virtualMachineName| Yes |Specify name for Alteon VA |
+| subnetName| Yes | Name for a new subnet |networkInterfaceName
+| virtualNetworkName| Yes | Name for a Virtual network|
+| networkInterfaceName| Yes | Name for a network interface |
+| addressPrefixes | Yes | Specify Alteon subnet |
+| publicIpAddressName| No | Name for the Public IP |
+| publicIpAddressType| No |Specify using Static or Dynamic Public IP |
+
+
+
+
+
+
+
