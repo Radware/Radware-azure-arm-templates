@@ -75,7 +75,7 @@ Refer to the Alteon VA Installation Guide for details of the Alteon VA cloud-ini
 
 Use the appropriate button below to deploy:
 
-[![Deploy to Azure](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FStandalone%2FSingleIP%2Fnew-network%2Fdeploy.template.json)
+[![Deploy to Azure]( https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FStandalone%2FSingleIP%2Fnew-network%2Fdeploy.template.json)
 
 ### Template Parameters
 
