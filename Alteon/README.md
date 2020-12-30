@@ -4,10 +4,10 @@
 
 The following page describes Alteon deployments types.
 
-  - **GUI** <br>These templates deploy a Standalone/High Availability Alteon VE.
+  - **GUI** <br>These templates deploy a Standalone/High Availability Alteon VA.
       This method simplified and leverage deployment speed by deploying an Alteon in a few steps.
  
- - **CLI** <br>These templates deploy a Standalone/High Availability Alteon VE.
+ - **CLI** <br>These templates deploy a Standalone/High Availability Alteon VA.
       This method is for fast deployment using Powershell/AzureCLI.
       The ARM templates can be engaged in large scale deployment and automation process.
       
