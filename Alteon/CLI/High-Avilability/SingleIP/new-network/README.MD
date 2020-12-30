@@ -99,15 +99,15 @@ Or simply run our launch script > "Launch.ps1" for simple deployment:
 
 | Parameter | Required | Description |
 | --- | --- | --- |
-| adminUsername | Yes | User name for Maint mode. |
-| adminPassword| Yes | Password for Maint mode. |
-| virtualMachineName| Yes |Specify name for Alteon VA |
-| subnetName| Yes | Name for a new subnet |networkInterfaceName
-| virtualNetworkName| Yes | Name for a Virtual network|
-| networkInterfaceName| Yes | Name for a network interface |
-| addressPrefixes | Yes | Specify Alteon subnet |
-| publicIpAddressName| No | Name for the Public IP |
-| publicIpAddressType| No |Specify using Static or Dynamic Public IP |
+| virtualMachineName| Yes |Specify name for Alteon VA. |
+| Resourcegroup| Yes |Specify name for resource group. |
+| location| Yes |Specify a location for deployment. |
+| dns Yes |Specify dns for Alteon API (High Avilability |
+| displayname| Yes |Specify display name for App registration |
+| homepage| Yes |Specify home page  for App registration |
+| identifierurl | Yes |Specify identifier URL  for App registration |
+| clientpassword | Yes |Specify ad password for App registration |
+
 
 
 ## Radware Azure portfolio
