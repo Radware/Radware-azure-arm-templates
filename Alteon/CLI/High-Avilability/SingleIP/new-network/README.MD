@@ -32,6 +32,7 @@ For information on getting started using Alteon on Azure, see [Alteon in Azure](
 
 - **Important**: When you configure the admin User/Password for the Alteon it will used for maint mode, Alteon User/Passwrod will remain default. 
 
+- Basic knowledge in Microsoft Powershell script.
 - Knowledge of Microsoft Azure and deploying VMs on the Microsoft Azure cloud.
 - Knowledge of Alteon Application Switch operating system.
 - Since you are deploying the BYOL template, you must have a valid Alteon license.
@@ -71,11 +72,27 @@ Refer to the Alteon VA Installation Guide for details of the Alteon VA cloud-ini
 
 ## Deployment
 
-### Azure deploy buttons
+### Azure CLI deployment
 
-Use the appropriate button below to deploy:
+As an alternative to deploying through the Azure Portal (GUI) each solution provides example scripts to deploy the ARM template.  The example commands can be found below along with the name of the script file, which exists in the current directory.
 
-[![Deploy to Azure]( https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FRadware%2FRadware-azure-arm-templates%2Fmaster%2FAlteon%2FGUI%2FStandalone%2FSingleIP%2Fnew-network%2Fdeploy.template.json)
+
+#### PowerShell Script Example
+
+```powershell
+## Powershell: $alteonsingledeployment = Invoke-WebRequest https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/CLI/Standalone/SingleIP/new-network/app/AlteonPS.ps1
+Invoke-Expression $($alteonsingledeployment.Content)
+Remove-Variable -Name alteonsingledeployment;
+```
+
+Or simply run our launch script > "Launch.ps1" for simple deployment:
+
+
+```powershell
+## Powershell: ./Launch.ps1
+```
+
+
 
 ### Template Parameters
 
