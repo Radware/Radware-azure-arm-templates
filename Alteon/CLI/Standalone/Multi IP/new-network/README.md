@@ -13,7 +13,7 @@
 
 ## Introduction
 
-This solution uses an ARM template to launch a single NIC deployment of a cloud-focused Alteon VA in Microsoft Azure. Traffic flows from the Alteon VA to the application servers. This is the standard Cloud design where the  Alteon VA instance is running with a single interface, where both management and data plane traffic is processed.  This is a traditional model in the cloud where the deployment is considered one-armed.
+This solution uses an ARM template to launch a Multi IP deployment of a cloud-focused Alteon VA in Microsoft Azure. Traffic flows from the Alteon VA to the application servers. This is the standard Cloud design where the  Alteon VA instance is running with a Multi IP interface, where both management and data plane traffic is processed.  This is a traditional model in the cloud where the deployment is considered one-armed.
 
 Alteon VA for Microsoft Azure cloud allows running your enterprise applications while tapping into
 Microsoft Azure computing resources and providing a common application delivery platform for your
@@ -92,7 +92,7 @@ As an alternative to deploying through the Azure Portal (GUI) each solution prov
 #### PowerShell Script Example
 
 ```powershell
-## Powershell: $alteonsingledeployment = Invoke-WebRequest https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/CLI/Standalone/SingleIP/new-network/app/AlteonPS.ps1
+## Powershell: $alteonsingledeployment = Invoke-WebRequest https://raw.githubusercontent.com/Radware/Radware-azure-arm-templates/master/Alteon/CLI/Standalone/Multi%20IP/new-network/app/AlteonPS.ps1
 Invoke-Expression $($alteonsingledeployment.Content)
 Remove-Variable -Name alteonsingledeployment;
 ```
