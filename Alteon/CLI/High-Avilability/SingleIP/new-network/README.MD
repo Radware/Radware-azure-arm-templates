@@ -102,7 +102,7 @@ Or simply run our launch script > "Launch.ps1" for simple deployment:
 | virtualMachineName| Yes |Specify name for Alteon VA. |
 | Resourcegroup| Yes |Specify name for resource group. |
 | location| Yes |Specify a location for deployment. |
-| dns Yes |Specify dns for Alteon API (High Avilability |
+| dns  | Yes | Specify dns for Alteon API (High Avilability). |
 | displayname| Yes |Specify display name for App registration |
 | homepage| Yes |Specify home page  for App registration |
 | identifierurl | Yes |Specify identifier URL  for App registration |
