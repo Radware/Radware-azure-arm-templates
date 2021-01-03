@@ -18,11 +18,11 @@ The following page describes Alteon deployments types.
 ## Best practice documents      
 
 To get familiar with our best practices, Please read our Azure deployment guide through the Azure marketplace
- https://support.radware.com/app/answers/answer_view/a_id/20942/related/1
+[Alteon in Azure](https://support.radware.com/app/answers/answer_view/a_id/20942/related/1). 
  
- http://portals.radware.com/Customer/Home/Product-Resources/Sales-Tools-Documents/Technical-Integration-Guides/Integration-Guide-Alteon-and-Microsoft-Azure/
+[Alteon In Azure - Integration guide ]( http://portals.radware.com/Customer/Home/Product-Resources/Sales-Tools-Documents/Technical-Integration-Guides/Integration-Guide-Alteon-and-Microsoft-Azure/). 
  
- https://www.youtube.com/watch?v=9D0mN6JKAHg
+ [Alteon In Azure - Demo]( https://www.youtube.com/watch?v=9D0mN6JKAHg/).
  
  
     
