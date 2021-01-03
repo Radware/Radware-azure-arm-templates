@@ -17,7 +17,7 @@ The following page describes Alteon deployments types.
       
 ## Best practice documents      
 
-To get familiar with our best practices, Please read our Azure deployment guide through the Azure marketplace
+To get familiar with our best practices, Please read our Azure deployment guide through the Azure marketplace: <br>
 [Alteon in Azure](https://support.radware.com/app/answers/answer_view/a_id/20942/related/1). 
  
 [Alteon In Azure - Integration guide ]( http://portals.radware.com/Customer/Home/Product-Resources/Sales-Tools-Documents/Technical-Integration-Guides/Integration-Guide-Alteon-and-Microsoft-Azure/). 
