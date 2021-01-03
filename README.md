@@ -5,15 +5,15 @@
 
 ## Introduction
 Welcome to Radware GitHub for Azure ARM templates.
-In the repository, please follow on bracnhes template:
+In the repository, please follow on branches template:
 Master-(product name)-(deployment method (CLI/GUI))-(solution name)
   
   - **GUI**<br>
-  The GUI directory contains the most recent templates that devolped by Radware.
+  The GUI directory contains the most recent templates developed by Radware.
   These templates are fully supported and tested.
    - **CLI**<br>
    The CLI directory contains ARM templates for automation and large scale deployment.
-   Thest templates are subject to change and not covered by Radware support.
+   These templates are subject to change and not covered by Radware support.
 
 ## Radware Azure portfolio
 
@@ -26,7 +26,7 @@ All known issues are on GitHub at https://github.com/Radware/Radware-azure-arm-t
 
 ## Template information
 
-Descriptions for each template are contained at the top of each template in the README file.
+Descriptions for each template are located at the top of each template in the README file.
 Please read the README file before deployment.
 ### Copyright
 
