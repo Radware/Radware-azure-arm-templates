@@ -1,29 +1,21 @@
-# Alteon powershell deployment
+## Single/Multi IP
 
-## Table Of Contents ###
-- [Description](#description )
-- [How To Use](#how-to-use )
-  * [Required modules](#Required-modules)
-  * [Using Launch file](#Using-Launch-file)
-- [Currently Supported](#currently-supported)
-- [Planed In The Future](#planed-in-the-future)
+[![Issues](https://img.shields.io/github/issues/Radware/Radware-azure-arm-templates)](https://github.com/radware/Radware-azure-arm-templates/issues)
+[![Commit](https://img.shields.io/github/last-commit/Radware/Radware-azure-arm-templates)]()
 
-## Description ##
-The following script is used to deploy alteon VM on azure with Microsoft Powershell script.<br>
-The script was tested on both windows Powershell client and Azure shell.<br>
-Supported deployment: Single IP.<br>
+In many of our templates, You can choose between single IP vs. Multi IP.
+Alteon VA running on the Azure Cloud runs by default in single IP address mode.<br> This is
+very useful when using Alteon to manage a single service.
+When there is a use case where there more than one application using the same service port, Multi IP is needed.
 
 
-## How To Use ##
-### Required modules ###
-In order to use the script make sure you have installed AzureRM cmdlet, and ExuctionPolicy set to "Unrestricted".
+  - **Single IP** <br> When running on Microsoft Azure, it is configured to have its management
+controlled through the data path. This is because any instance on Microsoft Azure is
+provided with a single IP address per network interface. To enable load-balancing
+HTTPS traffic and management access, the HTTPS port for management access, are
+changed to 8443. To access the Alteon Web interface, open your browser and enter the
+Alteon VA instance IP address with port 8443. For example, if the Alteon VM IP address
+is 1.1.1.1, enter https://1.1.1.1:8443
 
+ - **Multi IP** <br> These templates deploy an Alteon VA with N NICs for use in environments with a separate management network. 
 
-### Using Launch file ###
-Just run the launch file ("Launch.ps1") and the script will be loaded "Launch.ps1",<br>
-This file will pull dynamicly the neceasry files for deployment.
-
-## Planed In The Future ##
-* Multiple IP.
-* HA Deployment.
-* Autoscale Deployment.
